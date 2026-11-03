@@ -156,9 +156,11 @@ def open_support_ticket(
         summary.strip()[:MAX_TICKET_SUMMARY],
         contact.strip()[:MAX_TICKET_CONTACT],
     )
-    if not summary or not contact:
+    if not summary:
+        return {"error": "Ask for a short summary of the issue first."}
+    if not order_rules.is_valid_contact(contact):
         return {
-            "error": "Ask for a short summary of the issue and an e-mail or phone first."
+            "error": "Ask for a valid e-mail or the full phone number with area code (DDD)."
         }
     now = runtime.context.now
     protocol = f"EM-{now:%Y%m%d}-{uuid.uuid4().hex[:6].upper()}"
