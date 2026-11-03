@@ -15,6 +15,9 @@ dependencies = [
     "tzdata>=2025.2",
 ]
 
+[project.scripts]
+cadenza = "cadenza.cli:main"
+
 [project.optional-dependencies]
 # Other providers through the same MODEL=provider/model switch; only Anthropic is tested.
 openai = ["langchain-openai"]

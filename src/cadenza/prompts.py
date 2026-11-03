@@ -70,6 +70,11 @@ GREETING = (
     "instrumentos, preços, pedidos, trocas e políticas da loja. Como posso ajudar?"
 )
 
+CLI_HELP = "Digite /new para começar uma nova conversa ou /sair para encerrar."
+NEW_CONVERSATION = "Nova conversa"
+GOODBYE = "Até mais! Quando precisar, é só chamar."
+MESSAGE_TOO_LONG = "Sua mensagem ficou bem longa. Pode resumir em até 2.000 caracteres?"
+
 WEEKDAYS = (
     "Monday",
     "Tuesday",
