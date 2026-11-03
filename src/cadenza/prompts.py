@@ -70,6 +70,14 @@ GREETING = (
     "instrumentos, preços, pedidos, trocas e políticas da loja. Como posso ajudar?"
 )
 
+EMPTY_REPLY = (
+    "Desculpe, não consegui responder isso. Pode reformular a pergunta? "
+    f"Se preferir, fale com a nossa equipe no WhatsApp {OFFICIAL_WHATSAPP}."
+)
+API_ERROR_REPLY = (
+    "Estou com uma instabilidade agora e não consegui responder. Tente de novo em instantes "
+    f"ou fale com a nossa equipe no WhatsApp {OFFICIAL_WHATSAPP}."
+)
 CLI_HELP = "Digite /new para começar uma nova conversa ou /sair para encerrar."
 NEW_CONVERSATION = "Nova conversa"
 GOODBYE = "Até mais! Quando precisar, é só chamar."

@@ -104,3 +104,51 @@ def test_every_tool_converts_to_a_provider_schema_without_the_runtime_argument()
         "contact",
         "order_id",
     }
+
+
+class FailingModel(FakeToolModel):
+    def _generate(self, *args, **kwargs):
+        raise ConnectionError("provider down")
+
+
+def test_provider_failure_becomes_a_friendly_reply_and_the_chat_goes_on(
+    monkeypatch, script
+):
+    monkeypatch.setattr(
+        graph, "load_chat_model", lambda name: FailingModel(messages=iter([]))
+    )
+    thread, context = new_thread(), Context(now=NOW)
+    added = graph.run_turn("oi", context, thread)
+    assert get_message_text(added[-1]) == graph.prompts.API_ERROR_REPLY
+    script([AIMessage("Voltei!")])
+    assert get_message_text(graph.run_turn("oi?", context, thread)[-1]) == "Voltei!"
+
+
+@pytest.mark.parametrize(
+    "empty",
+    [
+        AIMessage(content=[]),
+        AIMessage(
+            content=[{"type": "thinking", "thinking": "...", "signature": "s"}],
+            response_metadata={"stop_reason": "max_tokens"},
+        ),
+        AIMessage(content="", response_metadata={"stop_reason": "refusal"}),
+    ],
+)
+def test_reply_without_text_is_replaced_by_the_fallback(script, empty):
+    script([empty])
+    added = graph.run_turn("oi", Context(now=NOW), new_thread())
+    assert get_message_text(added[-1]) == graph.prompts.EMPTY_REPLY
+
+
+def test_invalid_tool_arguments_go_back_to_the_model_as_an_error(script):
+    script(
+        [
+            tool_call("get_store_policy", topic="cardapio"),
+            AIMessage("Posso ajudar com outra coisa?"),
+        ]
+    )
+    added = graph.run_turn("qual o cardápio?", Context(now=NOW), new_thread())
+    tool_result = next(m for m in added if isinstance(m, ToolMessage))
+    assert tool_result.status == "error"
+    assert get_message_text(added[-1]) == "Posso ajudar com outra coisa?"
