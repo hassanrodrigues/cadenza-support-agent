@@ -1,4 +1,4 @@
-"""Store data: load the CSVs and derive prices, availability and order rules."""
+"""Store data: load the CSVs and derive product prices and availability."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import json
 import re
 import unicodedata
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date
 from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 
@@ -37,11 +37,6 @@ NAME_PREFIXES = {"bateria", "acustica", "teclado", "sintetizador"}
 MULTIWORD_BRANDS = ("music man",)
 # Only these categories name the brand in the description, so a mismatch there is a conflict.
 BRANDED_DESCRIPTION_CATEGORIES = {1, 2, 3, 4}
-
-REGRET_DAYS = 7  # manual 4.1, counted from delivery
-DEFECT_DAYS = 30  # manual 4.2, counted from purchase
-PREFERENCE_DAYS = 7  # manual 4.3, read as counted from delivery
-LEGAL_WARRANTY_DAYS = 90  # manual 8.1, counted from delivery
 
 
 @dataclass(frozen=True)
@@ -125,49 +120,6 @@ def has_description_conflict(name: str, description: str, category_id: int) -> b
     if category_id not in BRANDED_DESCRIPTION_CATEGORIES:
         return False
     return extract_brand(name) not in normalize_text(description)
-
-
-@dataclass(frozen=True)
-class ReturnWindow:
-    """Whether a return/exchange/warranty rule still applies, and until when."""
-
-    eligible: bool
-    deadline: date
-
-
-def normalize_phone(raw: str) -> str | None:
-    """Digits of a full Brazilian phone with area code, or None if incomplete."""
-    digits = re.sub(r"\D", "", raw)
-    # Drop the country code only when present: 55 is also a valid area code.
-    if len(digits) in (12, 13) and digits.startswith("55"):
-        digits = digits[2:]
-    return digits if len(digits) in (10, 11) else None
-
-
-def find_customer_ids(customers: pd.DataFrame, contact: str) -> list[int] | None:
-    """Customers matching an e-mail or a full phone; None when the contact is not usable."""
-    contact = contact.strip().lower()
-    if "@" in contact:
-        mask = customers["email"] == contact
-    else:
-        phone = normalize_phone(contact)
-        if phone is None:
-            return None
-        mask = customers["phone_digits"] == phone
-    return customers.loc[mask, "customer_id"].tolist()
-
-
-def return_windows(
-    order_date: date, delivered_on: date, today: date
-) -> dict[str, ReturnWindow]:
-    """Every return, exchange and warranty rule with its deadline, inclusive."""
-    deadlines = {
-        "regret_return": delivered_on + timedelta(days=REGRET_DAYS),
-        "defect_exchange": order_date + timedelta(days=DEFECT_DAYS),
-        "preference_exchange": delivered_on + timedelta(days=PREFERENCE_DAYS),
-        "legal_warranty": delivered_on + timedelta(days=LEGAL_WARRANTY_DAYS),
-    }
-    return {rule: ReturnWindow(today <= end, end) for rule, end in deadlines.items()}
 
 
 def _search_text(row: pd.Series) -> str:
