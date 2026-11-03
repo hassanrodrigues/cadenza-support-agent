@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import unicodedata
 from dataclasses import dataclass
 from datetime import date
@@ -53,6 +54,11 @@ def normalize_text(text: str) -> str:
     """Lowercase and strip accents, for matching."""
     decomposed = unicodedata.normalize("NFKD", str(text).lower())
     return "".join(ch for ch in decomposed if not unicodedata.combining(ch))
+
+
+def search_key(text: str) -> str:
+    """Normalized text without punctuation, so "GD-20" and "gd20" match."""
+    return re.sub(r"[^a-z0-9 ]", "", normalize_text(text))
 
 
 def to_money(value: float | str) -> Decimal:
@@ -125,7 +131,7 @@ def _search_text(row: pd.Series) -> str:
     ]
     if not row["description_conflict"]:
         parts.append(row["description"])
-    return normalize_text(" ".join(map(str, parts)))
+    return search_key(" ".join(map(str, parts)))
 
 
 def _parse_date(value: object) -> date | None:
