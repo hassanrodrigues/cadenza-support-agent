@@ -1,7 +1,7 @@
 import pytest
 
 from cadenza import policies
-from cadenza.context import DATA_DIR
+from cadenza.context import DATA_DIR, parse_now
 
 EXPECTED_TITLES = [
     ("1", "Sobre a Empório da Música"),
@@ -85,3 +85,17 @@ def test_every_topic_maps_to_non_empty_text(sections):
 def test_installment_conflict_comes_with_a_resolution_note():
     assert "3.1" in policies.TOPIC_NOTES["pagamento"]
     assert set(policies.TOPIC_NOTES) <= set(policies.TOPIC_SECTIONS)
+
+
+@pytest.mark.parametrize(
+    ("now", "expected"),
+    [
+        ("2026-11-03T10:00", "2026-11-03T10:00"),  # Tuesday, open
+        ("2026-11-03T02:36", "2026-11-03T09:00"),  # Tuesday, before opening
+        ("2026-11-06T18:00", "2026-11-07T09:00"),  # Friday at closing time
+        ("2026-11-07T14:00", "2026-11-09T09:00"),  # Saturday afternoon
+        ("2026-11-08T11:00", "2026-11-09T09:00"),  # Sunday
+    ],
+)
+def test_next_opening_follows_the_manual_hours(now, expected):
+    assert policies.next_opening(parse_now(now)) == parse_now(expected)
