@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Any, Literal, cast
 
@@ -80,3 +81,23 @@ def run_turn(
         {"messages": [("user", text)]}, config=config, context=context
     )
     return result["messages"][before:]
+
+
+def tool_calls(messages: list[BaseMessage]) -> list[str]:
+    """Tool calls made in these messages, formatted as name(arg="value")."""
+    return [
+        f"{call['name']}({', '.join(f'{k}={json.dumps(v, ensure_ascii=False)}' for k, v in call['args'].items())})"
+        for message in messages
+        if isinstance(message, AIMessage)
+        for call in message.tool_calls
+    ]
+
+
+def token_usage(messages: list[BaseMessage]) -> tuple[int, int]:
+    """Input and output tokens billed for these messages; output includes thinking."""
+    usage = [
+        m.usage_metadata
+        for m in messages
+        if isinstance(m, AIMessage) and m.usage_metadata
+    ]
+    return sum(u["input_tokens"] for u in usage), sum(u["output_tokens"] for u in usage)
