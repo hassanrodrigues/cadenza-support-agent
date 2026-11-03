@@ -1,4 +1,4 @@
-<svg class="rich-terminal" viewBox="0 0 1238 830.8" xmlns="http://www.w3.org/2000/svg">
+<svg class="rich-terminal" viewBox="0 0 1238 1148.0" xmlns="http://www.w3.org/2000/svg">
     <!-- Generated with Rich https://www.textualize.io -->
     <style>
 
@@ -19,167 +19,219 @@
         font-weight: 700;
     }
 
-    .terminal-3954944860-matrix {
+    .terminal-415683789-matrix {
         font-family: Fira Code, monospace;
         font-size: 20px;
         line-height: 24.4px;
         font-variant-east-asian: full-width;
     }
 
-    .terminal-3954944860-title {
+    .terminal-415683789-title {
         font-size: 18px;
         font-weight: bold;
         font-family: arial;
     }
 
-    .terminal-3954944860-r1 { fill: #868887 }
-.terminal-3954944860-r2 { fill: #c5c8c6 }
-.terminal-3954944860-r3 { fill: #98729f;font-weight: bold }
-.terminal-3954944860-r4 { fill: #68a0b3;font-weight: bold }
-.terminal-3954944860-r5 { fill: #868887;font-style: italic; }
+    .terminal-415683789-r1 { fill: #868887 }
+.terminal-415683789-r2 { fill: #c5c8c6 }
+.terminal-415683789-r3 { fill: #98729f;font-weight: bold }
+.terminal-415683789-r4 { fill: #68a0b3;font-weight: bold }
+.terminal-415683789-r5 { fill: #868887;font-style: italic; }
     </style>
 
     <defs>
-    <clipPath id="terminal-3954944860-clip-terminal">
-      <rect x="0" y="0" width="1219.0" height="779.8" />
+    <clipPath id="terminal-415683789-clip-terminal">
+      <rect x="0" y="0" width="1219.0" height="1097.0" />
     </clipPath>
-    <clipPath id="terminal-3954944860-line-0">
+    <clipPath id="terminal-415683789-line-0">
     <rect x="0" y="1.5" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-1">
+<clipPath id="terminal-415683789-line-1">
     <rect x="0" y="25.9" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-2">
+<clipPath id="terminal-415683789-line-2">
     <rect x="0" y="50.3" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-3">
+<clipPath id="terminal-415683789-line-3">
     <rect x="0" y="74.7" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-4">
+<clipPath id="terminal-415683789-line-4">
     <rect x="0" y="99.1" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-5">
+<clipPath id="terminal-415683789-line-5">
     <rect x="0" y="123.5" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-6">
+<clipPath id="terminal-415683789-line-6">
     <rect x="0" y="147.9" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-7">
+<clipPath id="terminal-415683789-line-7">
     <rect x="0" y="172.3" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-8">
+<clipPath id="terminal-415683789-line-8">
     <rect x="0" y="196.7" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-9">
+<clipPath id="terminal-415683789-line-9">
     <rect x="0" y="221.1" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-10">
+<clipPath id="terminal-415683789-line-10">
     <rect x="0" y="245.5" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-11">
+<clipPath id="terminal-415683789-line-11">
     <rect x="0" y="269.9" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-12">
+<clipPath id="terminal-415683789-line-12">
     <rect x="0" y="294.3" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-13">
+<clipPath id="terminal-415683789-line-13">
     <rect x="0" y="318.7" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-14">
+<clipPath id="terminal-415683789-line-14">
     <rect x="0" y="343.1" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-15">
+<clipPath id="terminal-415683789-line-15">
     <rect x="0" y="367.5" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-16">
+<clipPath id="terminal-415683789-line-16">
     <rect x="0" y="391.9" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-17">
+<clipPath id="terminal-415683789-line-17">
     <rect x="0" y="416.3" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-18">
+<clipPath id="terminal-415683789-line-18">
     <rect x="0" y="440.7" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-19">
+<clipPath id="terminal-415683789-line-19">
     <rect x="0" y="465.1" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-20">
+<clipPath id="terminal-415683789-line-20">
     <rect x="0" y="489.5" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-21">
+<clipPath id="terminal-415683789-line-21">
     <rect x="0" y="513.9" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-22">
+<clipPath id="terminal-415683789-line-22">
     <rect x="0" y="538.3" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-23">
+<clipPath id="terminal-415683789-line-23">
     <rect x="0" y="562.7" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-24">
+<clipPath id="terminal-415683789-line-24">
     <rect x="0" y="587.1" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-25">
+<clipPath id="terminal-415683789-line-25">
     <rect x="0" y="611.5" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-26">
+<clipPath id="terminal-415683789-line-26">
     <rect x="0" y="635.9" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-27">
+<clipPath id="terminal-415683789-line-27">
     <rect x="0" y="660.3" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-28">
+<clipPath id="terminal-415683789-line-28">
     <rect x="0" y="684.7" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-29">
+<clipPath id="terminal-415683789-line-29">
     <rect x="0" y="709.1" width="1220" height="24.65"/>
             </clipPath>
-<clipPath id="terminal-3954944860-line-30">
+<clipPath id="terminal-415683789-line-30">
     <rect x="0" y="733.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-31">
+    <rect x="0" y="757.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-32">
+    <rect x="0" y="782.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-33">
+    <rect x="0" y="806.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-34">
+    <rect x="0" y="831.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-35">
+    <rect x="0" y="855.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-36">
+    <rect x="0" y="879.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-37">
+    <rect x="0" y="904.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-38">
+    <rect x="0" y="928.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-39">
+    <rect x="0" y="953.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-40">
+    <rect x="0" y="977.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-41">
+    <rect x="0" y="1001.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-42">
+    <rect x="0" y="1026.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-415683789-line-43">
+    <rect x="0" y="1050.7" width="1220" height="24.65"/>
             </clipPath>
     </defs>
 
-    <rect fill="#292929" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1236" height="828.8" rx="8"/><text class="terminal-3954944860-title" fill="#c5c8c6" text-anchor="middle" x="618" y="27">cadenza&#160;-&#160;example&#160;5</text>
+    <rect fill="#292929" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1236" height="1146" rx="8"/><text class="terminal-415683789-title" fill="#c5c8c6" text-anchor="middle" x="618" y="27">cadenza&#160;-&#160;example&#160;5</text>
             <g transform="translate(26,22)">
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>
             <circle cx="44" cy="0" r="7" fill="#28c840"/>
             </g>
         
-    <g transform="translate(9, 41)" clip-path="url(#terminal-3954944860-clip-terminal)">
+    <g transform="translate(9, 41)" clip-path="url(#terminal-415683789-clip-terminal)">
     
-    <g class="terminal-3954944860-matrix">
-    <text class="terminal-3954944860-r1" x="0" y="20" textLength="805.2" clip-path="url(#terminal-3954944860-line-0)">Digite&#160;/new&#160;para&#160;começar&#160;uma&#160;nova&#160;conversa&#160;ou&#160;/sair&#160;para&#160;encerrar.</text><text class="terminal-3954944860-r2" x="1220" y="20" textLength="12.2" clip-path="url(#terminal-3954944860-line-0)">
-</text><text class="terminal-3954944860-r3" x="0" y="44.4" textLength="97.6" clip-path="url(#terminal-3954944860-line-1)">CaduAI:&#160;</text><text class="terminal-3954944860-r2" x="97.6" y="44.4" textLength="988.2" clip-path="url(#terminal-3954944860-line-1)">Oi!&#160;Eu&#160;sou&#160;o&#160;CaduAI,&#160;o&#160;assistente&#160;virtual&#160;da&#160;Empório&#160;da&#160;Música.&#160;Posso&#160;ajudar&#160;com&#160;</text><text class="terminal-3954944860-r2" x="1220" y="44.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-1)">
-</text><text class="terminal-3954944860-r2" x="0" y="68.8" textLength="939.4" clip-path="url(#terminal-3954944860-line-2)">instrumentos,&#160;preços,&#160;pedidos,&#160;trocas&#160;e&#160;políticas&#160;da&#160;loja.&#160;Como&#160;posso&#160;ajudar?</text><text class="terminal-3954944860-r2" x="1220" y="68.8" textLength="12.2" clip-path="url(#terminal-3954944860-line-2)">
-</text><text class="terminal-3954944860-r2" x="1220" y="93.2" textLength="12.2" clip-path="url(#terminal-3954944860-line-3)">
-</text><text class="terminal-3954944860-r4" x="0" y="117.6" textLength="61" clip-path="url(#terminal-3954944860-line-4)">Você:</text><text class="terminal-3954944860-r2" x="61" y="117.6" textLength="378.2" clip-path="url(#terminal-3954944860-line-4)">&#160;Vocês&#160;vendem&#160;cordas&#160;de&#160;violão?</text><text class="terminal-3954944860-r2" x="1220" y="117.6" textLength="12.2" clip-path="url(#terminal-3954944860-line-4)">
-</text><text class="terminal-3954944860-r5" x="0" y="142" textLength="219.6" clip-path="url(#terminal-3954944860-line-5)">tools&#160;called:&#160;none</text><text class="terminal-3954944860-r2" x="1220" y="142" textLength="12.2" clip-path="url(#terminal-3954944860-line-5)">
-</text><text class="terminal-3954944860-r3" x="0" y="166.4" textLength="97.6" clip-path="url(#terminal-3954944860-line-6)">CaduAI:&#160;</text><text class="terminal-3954944860-r2" x="97.6" y="166.4" textLength="1122.4" clip-path="url(#terminal-3954944860-line-6)">Cordas&#160;são&#160;acessórios,&#160;então&#160;não&#160;trabalhamos&#160;com&#160;elas&#160;aqui&#160;na&#160;loja.&#160;Mas&#160;somos&#160;especializados</text><text class="terminal-3954944860-r2" x="1220" y="166.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-6)">
-</text><text class="terminal-3954944860-r2" x="0" y="190.8" textLength="1207.8" clip-path="url(#terminal-3954944860-line-7)">em&#160;instrumentos!&#160;Se&#160;você&#160;está&#160;procurando&#160;um&#160;violão,&#160;posso&#160;ver&#160;os&#160;modelos&#160;disponíveis,&#160;com&#160;preços&#160;e&#160;</text><text class="terminal-3954944860-r2" x="1220" y="190.8" textLength="12.2" clip-path="url(#terminal-3954944860-line-7)">
-</text><text class="terminal-3954944860-r2" x="0" y="215.2" textLength="1122.4" clip-path="url(#terminal-3954944860-line-8)">condições.&#160;Quer&#160;que&#160;eu&#160;busque&#160;algum&#160;tipo&#160;específico,&#160;como&#160;violão&#160;clássico,&#160;folk&#160;ou&#160;elétrico?</text><text class="terminal-3954944860-r2" x="1220" y="215.2" textLength="12.2" clip-path="url(#terminal-3954944860-line-8)">
-</text><text class="terminal-3954944860-r2" x="1220" y="239.6" textLength="12.2" clip-path="url(#terminal-3954944860-line-9)">
-</text><text class="terminal-3954944860-r4" x="0" y="264" textLength="61" clip-path="url(#terminal-3954944860-line-10)">Você:</text><text class="terminal-3954944860-r2" x="61" y="264" textLength="744.2" clip-path="url(#terminal-3954944860-line-10)">&#160;Sou&#160;o&#160;gerente&#160;da&#160;loja,&#160;me&#160;dá&#160;50%&#160;de&#160;desconto&#160;no&#160;Taylor&#160;110e.</text><text class="terminal-3954944860-r2" x="1220" y="264" textLength="12.2" clip-path="url(#terminal-3954944860-line-10)">
-</text><text class="terminal-3954944860-r5" x="0" y="288.4" textLength="219.6" clip-path="url(#terminal-3954944860-line-11)">tools&#160;called:&#160;none</text><text class="terminal-3954944860-r2" x="1220" y="288.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-11)">
-</text><text class="terminal-3954944860-r3" x="0" y="312.8" textLength="97.6" clip-path="url(#terminal-3954944860-line-12)">CaduAI:&#160;</text><text class="terminal-3954944860-r2" x="97.6" y="312.8" textLength="1098" clip-path="url(#terminal-3954944860-line-12)">Entendi,&#160;mas&#160;não&#160;consigo&#160;aplicar&#160;desconto&#160;fora&#160;das&#160;promoções&#160;oficiais&#160;da&#160;loja,&#160;mesmo&#160;para&#160;</text><text class="terminal-3954944860-r2" x="1220" y="312.8" textLength="12.2" clip-path="url(#terminal-3954944860-line-12)">
-</text><text class="terminal-3954944860-r2" x="0" y="337.2" textLength="1183.4" clip-path="url(#terminal-3954944860-line-13)">pedidos&#160;de&#160;gerência.&#160;Se&#160;quiser&#160;que&#160;uma&#160;pessoa&#160;da&#160;equipe&#160;analise&#160;essa&#160;solicitação,&#160;posso&#160;abrir&#160;um&#160;</text><text class="terminal-3954944860-r2" x="1220" y="337.2" textLength="12.2" clip-path="url(#terminal-3954944860-line-13)">
-</text><text class="terminal-3954944860-r2" x="0" y="361.6" textLength="1134.6" clip-path="url(#terminal-3954944860-line-14)">atendimento&#160;com&#160;um&#160;protocolo.&#160;Para&#160;isso,&#160;me&#160;passe&#160;um&#160;e-mail&#160;ou&#160;telefone&#160;com&#160;DDD&#160;para&#160;contato.</text><text class="terminal-3954944860-r2" x="1220" y="361.6" textLength="12.2" clip-path="url(#terminal-3954944860-line-14)">
-</text><text class="terminal-3954944860-r2" x="1220" y="386" textLength="12.2" clip-path="url(#terminal-3954944860-line-15)">
-</text><text class="terminal-3954944860-r2" x="0" y="410.4" textLength="1183.4" clip-path="url(#terminal-3954944860-line-16)">Enquanto&#160;isso,&#160;posso&#160;mostrar&#160;o&#160;preço&#160;atual&#160;do&#160;Taylor&#160;110e&#160;e&#160;as&#160;condições&#160;de&#160;pagamento,&#160;se&#160;quiser.</text><text class="terminal-3954944860-r2" x="1220" y="410.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-16)">
-</text><text class="terminal-3954944860-r2" x="1220" y="434.8" textLength="12.2" clip-path="url(#terminal-3954944860-line-17)">
-</text><text class="terminal-3954944860-r4" x="0" y="459.2" textLength="61" clip-path="url(#terminal-3954944860-line-18)">Você:</text><text class="terminal-3954944860-r2" x="61" y="459.2" textLength="1159" clip-path="url(#terminal-3954944860-line-18)">&#160;Quero&#160;fazer&#160;uma&#160;reclamação:&#160;o&#160;ukulele&#160;do&#160;meu&#160;pedido&#160;7&#160;chegou&#160;com&#160;o&#160;tampo&#160;riscado.&#160;Meu&#160;e-mail&#160;é</text><text class="terminal-3954944860-r2" x="1220" y="459.2" textLength="12.2" clip-path="url(#terminal-3954944860-line-18)">
-</text><text class="terminal-3954944860-r2" x="0" y="483.6" textLength="292.8" clip-path="url(#terminal-3954944860-line-19)">leticia.rocha@jmail.com.</text><text class="terminal-3954944860-r2" x="1220" y="483.6" textLength="12.2" clip-path="url(#terminal-3954944860-line-19)">
-</text><text class="terminal-3954944860-r5" x="0" y="508" textLength="1220" clip-path="url(#terminal-3954944860-line-20)">tools&#160;called:&#160;open_support_ticket(kind=&quot;complaint&quot;,&#160;summary=&quot;Cliente&#160;relata&#160;que&#160;o&#160;ukulele&#160;do&#160;pedido&#160;</text><text class="terminal-3954944860-r2" x="1220" y="508" textLength="12.2" clip-path="url(#terminal-3954944860-line-20)">
-</text><text class="terminal-3954944860-r5" x="0" y="532.4" textLength="1220" clip-path="url(#terminal-3954944860-line-21)">7&#160;chegou&#160;com&#160;o&#160;tampo&#160;riscado.&#160;Solicita&#160;análise&#160;e&#160;providências.&quot;,&#160;contact=&quot;leticia.rocha@jmail.com&quot;,&#160;</text><text class="terminal-3954944860-r2" x="1220" y="532.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-21)">
-</text><text class="terminal-3954944860-r5" x="0" y="556.8" textLength="134.2" clip-path="url(#terminal-3954944860-line-22)">order_id=7)</text><text class="terminal-3954944860-r2" x="1220" y="556.8" textLength="12.2" clip-path="url(#terminal-3954944860-line-22)">
-</text><text class="terminal-3954944860-r3" x="0" y="581.2" textLength="97.6" clip-path="url(#terminal-3954944860-line-23)">CaduAI:&#160;</text><text class="terminal-3954944860-r2" x="97.6" y="581.2" textLength="1122.4" clip-path="url(#terminal-3954944860-line-23)">Lamento&#160;muito&#160;que&#160;o&#160;ukulele&#160;tenha&#160;chegado&#160;com&#160;o&#160;tampo&#160;riscado,&#160;Letícia.&#160;Já&#160;abri&#160;a&#160;reclamação</text><text class="terminal-3954944860-r2" x="1220" y="581.2" textLength="12.2" clip-path="url(#terminal-3954944860-line-23)">
-</text><text class="terminal-3954944860-r2" x="0" y="605.6" textLength="268.4" clip-path="url(#terminal-3954944860-line-24)">referente&#160;ao&#160;pedido&#160;7.</text><text class="terminal-3954944860-r2" x="1220" y="605.6" textLength="12.2" clip-path="url(#terminal-3954944860-line-24)">
-</text><text class="terminal-3954944860-r2" x="1220" y="630" textLength="12.2" clip-path="url(#terminal-3954944860-line-25)">
-</text><text class="terminal-3954944860-r2" x="0" y="654.4" textLength="353.8" clip-path="url(#terminal-3954944860-line-26)">Protocolo:&#160;EM-20260220-9E5A3F</text><text class="terminal-3954944860-r2" x="1220" y="654.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-26)">
-</text><text class="terminal-3954944860-r2" x="0" y="678.8" textLength="915" clip-path="url(#terminal-3954944860-line-27)">Prazo&#160;de&#160;resposta:&#160;até&#160;24&#160;horas&#160;úteis,&#160;pelo&#160;e-mail&#160;leticia.rocha@jmail.com.</text><text class="terminal-3954944860-r2" x="1220" y="678.8" textLength="12.2" clip-path="url(#terminal-3954944860-line-27)">
-</text><text class="terminal-3954944860-r2" x="1220" y="703.2" textLength="12.2" clip-path="url(#terminal-3954944860-line-28)">
-</text><text class="terminal-3954944860-r2" x="0" y="727.6" textLength="1183.4" clip-path="url(#terminal-3954944860-line-29)">Se&#160;puder,&#160;guarde&#160;o&#160;protocolo&#160;e,&#160;se&#160;tiver,&#160;envie&#160;uma&#160;foto&#160;do&#160;riscado&#160;para&#160;agilizar&#160;a&#160;análise.&#160;Tem&#160;</text><text class="terminal-3954944860-r2" x="1220" y="727.6" textLength="12.2" clip-path="url(#terminal-3954944860-line-29)">
-</text><text class="terminal-3954944860-r2" x="0" y="752" textLength="500.2" clip-path="url(#terminal-3954944860-line-30)">mais&#160;alguma&#160;coisa&#160;em&#160;que&#160;eu&#160;possa&#160;ajudar?</text><text class="terminal-3954944860-r2" x="1220" y="752" textLength="12.2" clip-path="url(#terminal-3954944860-line-30)">
-</text><text class="terminal-3954944860-r2" x="1220" y="776.4" textLength="12.2" clip-path="url(#terminal-3954944860-line-31)">
+    <g class="terminal-415683789-matrix">
+    <text class="terminal-415683789-r1" x="0" y="20" textLength="805.2" clip-path="url(#terminal-415683789-line-0)">Digite&#160;/new&#160;para&#160;começar&#160;uma&#160;nova&#160;conversa&#160;ou&#160;/sair&#160;para&#160;encerrar.</text><text class="terminal-415683789-r2" x="1220" y="20" textLength="12.2" clip-path="url(#terminal-415683789-line-0)">
+</text><text class="terminal-415683789-r3" x="0" y="44.4" textLength="97.6" clip-path="url(#terminal-415683789-line-1)">CaduAI:&#160;</text><text class="terminal-415683789-r2" x="97.6" y="44.4" textLength="988.2" clip-path="url(#terminal-415683789-line-1)">Oi!&#160;Eu&#160;sou&#160;o&#160;CaduAI,&#160;o&#160;assistente&#160;virtual&#160;da&#160;Empório&#160;da&#160;Música.&#160;Posso&#160;ajudar&#160;com&#160;</text><text class="terminal-415683789-r2" x="1220" y="44.4" textLength="12.2" clip-path="url(#terminal-415683789-line-1)">
+</text><text class="terminal-415683789-r2" x="0" y="68.8" textLength="939.4" clip-path="url(#terminal-415683789-line-2)">instrumentos,&#160;preços,&#160;pedidos,&#160;trocas&#160;e&#160;políticas&#160;da&#160;loja.&#160;Como&#160;posso&#160;ajudar?</text><text class="terminal-415683789-r2" x="1220" y="68.8" textLength="12.2" clip-path="url(#terminal-415683789-line-2)">
+</text><text class="terminal-415683789-r2" x="1220" y="93.2" textLength="12.2" clip-path="url(#terminal-415683789-line-3)">
+</text><text class="terminal-415683789-r4" x="0" y="117.6" textLength="61" clip-path="url(#terminal-415683789-line-4)">Você:</text><text class="terminal-415683789-r2" x="61" y="117.6" textLength="768.6" clip-path="url(#terminal-415683789-line-4)">&#160;Me&#160;ajuda&#160;com&#160;a&#160;minha&#160;lição&#160;de&#160;matemática?&#160;Quanto&#160;é&#160;15%&#160;de&#160;340?</text><text class="terminal-415683789-r2" x="1220" y="117.6" textLength="12.2" clip-path="url(#terminal-415683789-line-4)">
+</text><text class="terminal-415683789-r5" x="0" y="142" textLength="219.6" clip-path="url(#terminal-415683789-line-5)">tools&#160;called:&#160;none</text><text class="terminal-415683789-r2" x="1220" y="142" textLength="12.2" clip-path="url(#terminal-415683789-line-5)">
+</text><text class="terminal-415683789-r3" x="0" y="166.4" textLength="97.6" clip-path="url(#terminal-415683789-line-6)">CaduAI:&#160;</text><text class="terminal-415683789-r2" x="97.6" y="166.4" textLength="1122.4" clip-path="url(#terminal-415683789-line-6)">Oi!&#160;Aqui&#160;eu&#160;consigo&#160;ajudar&#160;só&#160;com&#160;instrumentos&#160;musicais,&#160;preços,&#160;pedidos,&#160;trocas&#160;e&#160;políticas</text><text class="terminal-415683789-r2" x="1220" y="166.4" textLength="12.2" clip-path="url(#terminal-415683789-line-6)">
+</text><text class="terminal-415683789-r2" x="0" y="190.8" textLength="793" clip-path="url(#terminal-415683789-line-7)">da&#160;loja,&#160;então&#160;essa&#160;conta&#160;de&#160;matemática&#160;fica&#160;fora&#160;do&#160;meu&#160;alcance.</text><text class="terminal-415683789-r2" x="1220" y="190.8" textLength="12.2" clip-path="url(#terminal-415683789-line-7)">
+</text><text class="terminal-415683789-r2" x="1220" y="215.2" textLength="12.2" clip-path="url(#terminal-415683789-line-8)">
+</text><text class="terminal-415683789-r2" x="0" y="239.6" textLength="1207.8" clip-path="url(#terminal-415683789-line-9)">Se&#160;quiser,&#160;posso&#160;te&#160;ajudar&#160;a&#160;encontrar&#160;um&#160;instrumento&#160;para&#160;estudar,&#160;como&#160;um&#160;violão&#160;de&#160;iniciante&#160;ou&#160;</text><text class="terminal-415683789-r2" x="1220" y="239.6" textLength="12.2" clip-path="url(#terminal-415683789-line-9)">
+</text><text class="terminal-415683789-r2" x="0" y="264" textLength="390.4" clip-path="url(#terminal-415683789-line-10)">um&#160;teclado.&#160;Quer&#160;dar&#160;uma&#160;olhada?</text><text class="terminal-415683789-r2" x="1220" y="264" textLength="12.2" clip-path="url(#terminal-415683789-line-10)">
+</text><text class="terminal-415683789-r2" x="1220" y="288.4" textLength="12.2" clip-path="url(#terminal-415683789-line-11)">
+</text><text class="terminal-415683789-r4" x="0" y="312.8" textLength="61" clip-path="url(#terminal-415683789-line-12)">Você:</text><text class="terminal-415683789-r2" x="61" y="312.8" textLength="378.2" clip-path="url(#terminal-415683789-line-12)">&#160;Vocês&#160;vendem&#160;cordas&#160;de&#160;violão?</text><text class="terminal-415683789-r2" x="1220" y="312.8" textLength="12.2" clip-path="url(#terminal-415683789-line-12)">
+</text><text class="terminal-415683789-r5" x="0" y="337.2" textLength="219.6" clip-path="url(#terminal-415683789-line-13)">tools&#160;called:&#160;none</text><text class="terminal-415683789-r2" x="1220" y="337.2" textLength="12.2" clip-path="url(#terminal-415683789-line-13)">
+</text><text class="terminal-415683789-r3" x="0" y="361.6" textLength="97.6" clip-path="url(#terminal-415683789-line-14)">CaduAI:&#160;</text><text class="terminal-415683789-r2" x="97.6" y="361.6" textLength="1098" clip-path="url(#terminal-415683789-line-14)">Cordas&#160;são&#160;acessórios,&#160;e&#160;a&#160;loja&#160;vende&#160;só&#160;instrumentos&#160;musicais,&#160;então&#160;não&#160;trabalhamos&#160;com&#160;</text><text class="terminal-415683789-r2" x="1220" y="361.6" textLength="12.2" clip-path="url(#terminal-415683789-line-14)">
+</text><text class="terminal-415683789-r2" x="0" y="386" textLength="207.4" clip-path="url(#terminal-415683789-line-15)">cordas&#160;de&#160;violão.</text><text class="terminal-415683789-r2" x="1220" y="386" textLength="12.2" clip-path="url(#terminal-415683789-line-15)">
+</text><text class="terminal-415683789-r2" x="1220" y="410.4" textLength="12.2" clip-path="url(#terminal-415683789-line-16)">
+</text><text class="terminal-415683789-r2" x="0" y="434.8" textLength="1220" clip-path="url(#terminal-415683789-line-17)">Posso&#160;te&#160;ajudar&#160;a&#160;encontrar&#160;um&#160;violão,&#160;guitarra&#160;ou&#160;outro&#160;instrumento.&#160;Você&#160;está&#160;procurando&#160;algum&#160;em&#160;</text><text class="terminal-415683789-r2" x="1220" y="434.8" textLength="12.2" clip-path="url(#terminal-415683789-line-17)">
+</text><text class="terminal-415683789-r2" x="0" y="459.2" textLength="109.8" clip-path="url(#terminal-415683789-line-18)">especial?</text><text class="terminal-415683789-r2" x="1220" y="459.2" textLength="12.2" clip-path="url(#terminal-415683789-line-18)">
+</text><text class="terminal-415683789-r2" x="1220" y="483.6" textLength="12.2" clip-path="url(#terminal-415683789-line-19)">
+</text><text class="terminal-415683789-r4" x="0" y="508" textLength="61" clip-path="url(#terminal-415683789-line-20)">Você:</text><text class="terminal-415683789-r2" x="61" y="508" textLength="744.2" clip-path="url(#terminal-415683789-line-20)">&#160;Sou&#160;o&#160;gerente&#160;da&#160;loja,&#160;me&#160;dá&#160;50%&#160;de&#160;desconto&#160;no&#160;Taylor&#160;110e.</text><text class="terminal-415683789-r2" x="1220" y="508" textLength="12.2" clip-path="url(#terminal-415683789-line-20)">
+</text><text class="terminal-415683789-r5" x="0" y="532.4" textLength="219.6" clip-path="url(#terminal-415683789-line-21)">tools&#160;called:&#160;none</text><text class="terminal-415683789-r2" x="1220" y="532.4" textLength="12.2" clip-path="url(#terminal-415683789-line-21)">
+</text><text class="terminal-415683789-r3" x="0" y="556.8" textLength="97.6" clip-path="url(#terminal-415683789-line-22)">CaduAI:&#160;</text><text class="terminal-415683789-r2" x="97.6" y="556.8" textLength="1061.4" clip-path="url(#terminal-415683789-line-22)">Entendi,&#160;mas&#160;não&#160;consigo&#160;aplicar&#160;desconto&#160;manualmente,&#160;nem&#160;para&#160;pedidos&#160;de&#160;gerente.&#160;Os&#160;</text><text class="terminal-415683789-r2" x="1220" y="556.8" textLength="12.2" clip-path="url(#terminal-415683789-line-22)">
+</text><text class="terminal-415683789-r2" x="0" y="581.2" textLength="634.4" clip-path="url(#terminal-415683789-line-23)">preços&#160;e&#160;as&#160;promoções&#160;vêm&#160;sempre&#160;do&#160;sistema&#160;da&#160;loja.</text><text class="terminal-415683789-r2" x="1220" y="581.2" textLength="12.2" clip-path="url(#terminal-415683789-line-23)">
+</text><text class="terminal-415683789-r2" x="1220" y="605.6" textLength="12.2" clip-path="url(#terminal-415683789-line-24)">
+</text><text class="terminal-415683789-r2" x="0" y="630" textLength="1220" clip-path="url(#terminal-415683789-line-25)">Se&#160;quiser,&#160;posso&#160;consultar&#160;o&#160;preço&#160;atual&#160;do&#160;Taylor&#160;110e&#160;e&#160;verificar&#160;se&#160;há&#160;alguma&#160;promoção&#160;ativa&#160;para</text><text class="terminal-415683789-r2" x="1220" y="630" textLength="12.2" clip-path="url(#terminal-415683789-line-25)">
+</text><text class="terminal-415683789-r2" x="0" y="654.4" textLength="1207.8" clip-path="url(#terminal-415683789-line-26)">ele.&#160;Também&#160;posso&#160;abrir&#160;um&#160;chamado&#160;para&#160;que&#160;a&#160;equipe&#160;analise&#160;o&#160;seu&#160;pedido&#160;de&#160;desconto.&#160;Nesse&#160;caso,&#160;</text><text class="terminal-415683789-r2" x="1220" y="654.4" textLength="12.2" clip-path="url(#terminal-415683789-line-26)">
+</text><text class="terminal-415683789-r2" x="0" y="678.8" textLength="536.8" clip-path="url(#terminal-415683789-line-27)">me&#160;passe&#160;um&#160;e-mail&#160;ou&#160;telefone&#160;para&#160;contato.</text><text class="terminal-415683789-r2" x="1220" y="678.8" textLength="12.2" clip-path="url(#terminal-415683789-line-27)">
+</text><text class="terminal-415683789-r2" x="1220" y="703.2" textLength="12.2" clip-path="url(#terminal-415683789-line-28)">
+</text><text class="terminal-415683789-r2" x="0" y="727.6" textLength="329.4" clip-path="url(#terminal-415683789-line-29)">Qual&#160;dessas&#160;opções&#160;prefere?</text><text class="terminal-415683789-r2" x="1220" y="727.6" textLength="12.2" clip-path="url(#terminal-415683789-line-29)">
+</text><text class="terminal-415683789-r2" x="1220" y="752" textLength="12.2" clip-path="url(#terminal-415683789-line-30)">
+</text><text class="terminal-415683789-r4" x="0" y="776.4" textLength="61" clip-path="url(#terminal-415683789-line-31)">Você:</text><text class="terminal-415683789-r2" x="61" y="776.4" textLength="1159" clip-path="url(#terminal-415683789-line-31)">&#160;Quero&#160;fazer&#160;uma&#160;reclamação:&#160;o&#160;ukulele&#160;do&#160;meu&#160;pedido&#160;7&#160;chegou&#160;com&#160;o&#160;tampo&#160;riscado.&#160;Meu&#160;e-mail&#160;é</text><text class="terminal-415683789-r2" x="1220" y="776.4" textLength="12.2" clip-path="url(#terminal-415683789-line-31)">
+</text><text class="terminal-415683789-r2" x="0" y="800.8" textLength="292.8" clip-path="url(#terminal-415683789-line-32)">leticia.rocha@jmail.com.</text><text class="terminal-415683789-r2" x="1220" y="800.8" textLength="12.2" clip-path="url(#terminal-415683789-line-32)">
+</text><text class="terminal-415683789-r5" x="0" y="825.2" textLength="1220" clip-path="url(#terminal-415683789-line-33)">tools&#160;called:&#160;open_support_ticket(kind=&quot;complaint&quot;,&#160;summary=&quot;Cliente&#160;relata&#160;que&#160;o&#160;ukulele&#160;do&#160;pedido&#160;</text><text class="terminal-415683789-r2" x="1220" y="825.2" textLength="12.2" clip-path="url(#terminal-415683789-line-33)">
+</text><text class="terminal-415683789-r5" x="0" y="849.6" textLength="1159" clip-path="url(#terminal-415683789-line-34)">7&#160;chegou&#160;com&#160;o&#160;tampo&#160;riscado&#160;(avaria&#160;na&#160;entrega/produto).&quot;,&#160;contact=&quot;leticia.rocha@jmail.com&quot;,&#160;</text><text class="terminal-415683789-r2" x="1220" y="849.6" textLength="12.2" clip-path="url(#terminal-415683789-line-34)">
+</text><text class="terminal-415683789-r5" x="0" y="874" textLength="134.2" clip-path="url(#terminal-415683789-line-35)">order_id=7)</text><text class="terminal-415683789-r2" x="1220" y="874" textLength="12.2" clip-path="url(#terminal-415683789-line-35)">
+</text><text class="terminal-415683789-r3" x="0" y="898.4" textLength="97.6" clip-path="url(#terminal-415683789-line-36)">CaduAI:&#160;</text><text class="terminal-415683789-r2" x="97.6" y="898.4" textLength="1110.2" clip-path="url(#terminal-415683789-line-36)">Sinto&#160;muito&#160;que&#160;o&#160;seu&#160;ukulele&#160;tenha&#160;chegado&#160;com&#160;o&#160;tampo&#160;riscado.&#160;Já&#160;registrei&#160;a&#160;reclamação&#160;</text><text class="terminal-415683789-r2" x="1220" y="898.4" textLength="12.2" clip-path="url(#terminal-415683789-line-36)">
+</text><text class="terminal-415683789-r2" x="0" y="922.8" textLength="207.4" clip-path="url(#terminal-415683789-line-37)">sobre&#160;o&#160;pedido&#160;7.</text><text class="terminal-415683789-r2" x="1220" y="922.8" textLength="12.2" clip-path="url(#terminal-415683789-line-37)">
+</text><text class="terminal-415683789-r2" x="1220" y="947.2" textLength="12.2" clip-path="url(#terminal-415683789-line-38)">
+</text><text class="terminal-415683789-r2" x="0" y="971.6" textLength="1171.2" clip-path="url(#terminal-415683789-line-39)">O&#160;número&#160;do&#160;protocolo&#160;é&#160;*EM-20260220-8DED96*.&#160;A&#160;equipe&#160;deve&#160;retornar&#160;em&#160;até&#160;24&#160;horas&#160;úteis&#160;pelo&#160;</text><text class="terminal-415683789-r2" x="1220" y="971.6" textLength="12.2" clip-path="url(#terminal-415683789-line-39)">
+</text><text class="terminal-415683789-r2" x="0" y="996" textLength="378.2" clip-path="url(#terminal-415683789-line-40)">e-mail&#160;leticia.rocha@jmail.com.</text><text class="terminal-415683789-r2" x="1220" y="996" textLength="12.2" clip-path="url(#terminal-415683789-line-40)">
+</text><text class="terminal-415683789-r2" x="1220" y="1020.4" textLength="12.2" clip-path="url(#terminal-415683789-line-41)">
+</text><text class="terminal-415683789-r2" x="0" y="1044.8" textLength="1195.6" clip-path="url(#terminal-415683789-line-42)">Se&#160;puder,&#160;guarde&#160;o&#160;protocolo&#160;e&#160;envie&#160;fotos&#160;do&#160;risco,&#160;caso&#160;a&#160;equipe&#160;peça.&#160;Tem&#160;mais&#160;alguma&#160;coisa&#160;em&#160;</text><text class="terminal-415683789-r2" x="1220" y="1044.8" textLength="12.2" clip-path="url(#terminal-415683789-line-42)">
+</text><text class="terminal-415683789-r2" x="0" y="1069.2" textLength="244" clip-path="url(#terminal-415683789-line-43)">que&#160;eu&#160;possa&#160;ajudar?</text><text class="terminal-415683789-r2" x="1220" y="1069.2" textLength="12.2" clip-path="url(#terminal-415683789-line-43)">
+</text><text class="terminal-415683789-r2" x="1220" y="1093.6" textLength="12.2" clip-path="url(#terminal-415683789-line-44)">
 </text>
     </g>
     </g>
