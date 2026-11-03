@@ -103,3 +103,16 @@ def test_new_command_starts_a_separate_conversation(monkeypatch):
 def test_end_of_input_closes_the_chat_without_a_traceback(monkeypatch):
     output, _ = run_chat(monkeypatch, [])
     assert prompts.GOODBYE in output
+
+
+def test_only_the_label_of_a_reply_is_styled(monkeypatch):
+    printed = []
+    console = Console(file=io.StringIO())
+    monkeypatch.setattr(
+        console, "print", lambda renderable, **kw: printed.append(renderable)
+    )
+    cli.say(console, "Olá [cliente]")
+    (text,) = printed
+    assert text.plain == "CaduAI: Olá [cliente]"
+    assert not text.style
+    assert [(span.start, span.end) for span in text.spans] == [(0, len("CaduAI: "))]
