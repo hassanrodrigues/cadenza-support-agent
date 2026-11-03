@@ -12,6 +12,11 @@ from pathlib import Path
 import pandas as pd
 
 CENT = Decimal("0.01")
+PIX_DISCOUNT = Decimal("0.05")
+# (highest installment count in the tier, minimum installment), manual section 3.1.
+# "Up to 3x, no minimum (except below R$ 50)" is read as a R$ 50 minimum.
+INSTALLMENT_TIERS = ((3, Decimal("50")), (6, Decimal("80")), (12, Decimal("100")))
+MAX_INSTALLMENTS = INSTALLMENT_TIERS[-1][0]
 
 # Normalized aliases customers use for each category_id. "sopro" covers both wind categories.
 CATEGORY_ALIASES = {
@@ -55,6 +60,37 @@ def to_money(value: float | str) -> Decimal:
     return Decimal(str(value)).quantize(CENT, ROUND_HALF_UP)
 
 
+def format_brl(value: Decimal) -> str:
+    """Format as Brazilian currency, e.g. R$ 2.199,00."""
+    return "R$ " + f"{value:,.2f}".translate(str.maketrans(",.", ".,"))
+
+
+def availability(status: str, stock: int) -> str:
+    """Status wins over stock: only active products with stock are for sale."""
+    if status != "active":
+        return status  # discontinued or coming_soon
+    return "available" if stock > 0 else "out_of_stock"
+
+
+def apply_discount(price: Decimal, percent: int) -> Decimal:
+    """Price after a percentage discount, rounded to cents."""
+    return (price * (100 - percent) / 100).quantize(CENT, ROUND_HALF_UP)
+
+
+def pix_price(price: Decimal) -> Decimal:
+    """Cash price with the PIX discount; only valid when there is no promotion."""
+    return (price * (1 - PIX_DISCOUNT)).quantize(CENT, ROUND_HALF_UP)
+
+
+def max_installments(price: Decimal) -> tuple[int, Decimal]:
+    """Largest interest-free installment count allowed for the price, and its value."""
+    for count in range(MAX_INSTALLMENTS, 1, -1):
+        minimum = next(floor for limit, floor in INSTALLMENT_TIERS if count <= limit)
+        if price / count >= minimum:
+            return count, (price / count).quantize(CENT, ROUND_HALF_UP)
+    return 1, price
+
+
 def resolve_category(text: str) -> list[int] | None:
     """Category ids matching a customer term, or None if the term is unknown."""
     term = normalize_text(text).strip()
@@ -96,7 +132,38 @@ def _parse_date(value: object) -> date | None:
     return date.fromisoformat(value) if isinstance(value, str) else None
 
 
-def _prepare_products(products: pd.DataFrame, categories: pd.DataFrame) -> pd.DataFrame:
+def _apply_pricing(products: pd.DataFrame, promotions: pd.DataFrame) -> None:
+    # Promotions never stack, so the highest active discount wins.
+    active = promotions[promotions["is_active"] == 1].sort_values("discount_percent")
+    best = {p.product_id: p for p in active.itertuples()}
+    ended: dict[int, list[str]] = {}
+    for p in promotions[promotions["is_active"] == 0].itertuples():
+        ended.setdefault(p.product_id, []).append(
+            f"{p.discount_percent}% ({p.description})"
+        )
+
+    ids, prices = products["product_id"], products["price"]
+    percents = [best[i].discount_percent if i in best else 0 for i in ids]
+    effective = [
+        apply_discount(p, pct) if pct else p for p, pct in zip(prices, percents)
+    ]
+    products["availability"] = [
+        availability(s, q)
+        for s, q in zip(products["status"], products["stock_quantity"])
+    ]
+    products["promo_percent"] = percents
+    products["promo_name"] = [best[i].description if i in best else "" for i in ids]
+    products["effective_price"] = effective
+    products["pix_price"] = [
+        None if pct else pix_price(p) for p, pct in zip(prices, percents)
+    ]
+    products["installments"] = [max_installments(p) for p in effective]
+    products["ended_promotions"] = [ended.get(i, []) for i in ids]
+
+
+def _prepare_products(
+    products: pd.DataFrame, categories: pd.DataFrame, promotions: pd.DataFrame
+) -> pd.DataFrame:
     products = products.copy()
     products["price"] = products["price_brl"].map(to_money)
     products["specs"] = products["specs"].map(json.loads)
@@ -110,6 +177,7 @@ def _prepare_products(products: pd.DataFrame, categories: pd.DataFrame) -> pd.Da
         )
     ]
     products["search_text"] = products.apply(_search_text, axis=1)
+    _apply_pricing(products, promotions)
     return products.set_index("product_id", drop=False)
 
 
@@ -125,10 +193,11 @@ def load_store(data_dir: Path) -> Store:
     orders = read("orders")
     for column in ("order_date", "estimated_delivery"):
         orders[column] = orders[column].map(_parse_date)
+    promotions = read("promotions")
     return Store(
-        products=_prepare_products(read("products"), read("categories")),
+        products=_prepare_products(read("products"), read("categories"), promotions),
         customers=customers,
         orders=orders,
         order_items=read("order_items"),
-        promotions=read("promotions"),
+        promotions=promotions,
     )

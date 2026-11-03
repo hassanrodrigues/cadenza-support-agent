@@ -80,3 +80,76 @@ def test_order_dates_are_parsed_and_missing_ones_are_none(store):
     orders = store.orders.set_index("order_id")
     assert orders.loc[7, "estimated_delivery"] == date(2026, 2, 17)
     assert orders.loc[9, "estimated_delivery"] is None
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        ("2199", "R$ 2.199,00"),
+        ("1967.18", "R$ 1.967,18"),
+        ("599.9", "R$ 599,90"),
+        ("12500", "R$ 12.500,00"),
+    ],
+)
+def test_format_brl_uses_brazilian_separators(value, expected):
+    assert sd.format_brl(Decimal(value)) == expected
+
+
+@pytest.mark.parametrize(
+    ("product_id", "expected"),
+    [
+        (95, "available"),
+        (96, "out_of_stock"),
+        (113, "discontinued"),
+        (136, "discontinued"),
+        (130, "coming_soon"),
+    ],
+)
+def test_status_wins_over_stock(store, product_id, expected):
+    assert store.products.loc[product_id, "availability"] == expected
+
+
+def test_only_four_promotions_are_active(store):
+    promo = store.products[store.products["promo_percent"] > 0][
+        "promo_percent"
+    ].to_dict()
+    assert promo == {90: 18, 94: 8, 121: 20, 127: 10}
+
+
+def test_promo_price_is_rounded_to_cents_and_has_no_pix(store):
+    crafter, taylor = store.products.loc[90], store.products.loc[94]
+    assert crafter["effective_price"] == Decimal("1967.18")
+    assert taylor["effective_price"] == Decimal("5519.08")
+    assert taylor["pix_price"] is None
+
+
+def test_pix_price_applies_only_without_promotion(store):
+    takamine = store.products.loc[95]
+    assert takamine["promo_percent"] == 0
+    assert takamine["effective_price"] == Decimal("2199.00")
+    assert takamine["pix_price"] == Decimal("2089.05")
+
+
+def test_ended_promotions_are_kept_for_transparency(store):
+    assert store.products.loc[95, "ended_promotions"] == ["12% (Oferta Especial)"]
+    assert len(store.products.loc[93, "ended_promotions"]) == 2
+
+
+@pytest.mark.parametrize(
+    ("price", "expected"),
+    [
+        ("2199", (12, "183.25")),
+        ("1199", (11, "109.00")),
+        ("500", (6, "83.33")),
+        ("250", (3, "83.33")),
+        ("120", (2, "60.00")),
+        ("40", (1, "40.00")),
+    ],
+)
+def test_max_installments_follow_manual_tiers(price, expected):
+    count, value = sd.max_installments(Decimal(price).quantize(sd.CENT))
+    assert (count, str(value)) == expected
+
+
+def test_installments_use_the_promotional_price(store):
+    assert store.products.loc[90, "installments"] == (12, Decimal("163.93"))
