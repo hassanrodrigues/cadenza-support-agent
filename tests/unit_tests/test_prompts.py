@@ -20,6 +20,7 @@ def test_prompt_has_every_section_in_order():
         "persona",
         "store_rules",
         "when_to_use_tools",
+        "security",
         "response_format",
         "current_context",
     ]
