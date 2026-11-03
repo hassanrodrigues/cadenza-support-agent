@@ -131,3 +131,11 @@ def test_accessory_searches_are_answered_with_a_not_sold_notice():
 
 def test_seven_string_guitars_are_not_mistaken_for_strings():
     assert catalog.search_products(query="violão 7 cordas")["products"]
+
+
+def test_search_for_a_product_not_for_sale_says_so_instead_of_returning_nothing():
+    result = catalog.search_products(query="Giannini GF-3D")
+    assert result["showing"] == "0 of 0"
+    assert ids({"a": result["not_for_sale"]}, "a") == [96]
+    assert result["not_for_sale"][0]["availability"] == "out_of_stock"
+    assert "get_product_details" in result["notice"]

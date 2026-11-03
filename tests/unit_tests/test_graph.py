@@ -152,3 +152,22 @@ def test_invalid_tool_arguments_go_back_to_the_model_as_an_error(script):
     tool_result = next(m for m in added if isinstance(m, ToolMessage))
     assert tool_result.status == "error"
     assert get_message_text(added[-1]) == "Posso ajudar com outra coisa?"
+
+
+def test_tool_calls_and_token_usage_are_summarized_per_turn(script):
+    first = tool_call("search_products", category="violões", max_price=1000)
+    first.usage_metadata = {
+        "input_tokens": 100,
+        "output_tokens": 20,
+        "total_tokens": 120,
+    }
+    reply = AIMessage(
+        "ok",
+        usage_metadata={"input_tokens": 150, "output_tokens": 30, "total_tokens": 180},
+    )
+    script([first, reply])
+    added = graph.run_turn("violões até 1000", Context(now=NOW), new_thread())
+    assert graph.tool_calls(added) == [
+        'search_products(category="violões", max_price=1000)'
+    ]
+    assert graph.token_usage(added) == (250, 50)

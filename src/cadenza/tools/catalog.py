@@ -24,6 +24,14 @@ ACCESSORY_TERMS = set(
     "palheta palhetas cabo cabos pedal pedais pedaleira amplificador amplificadores amp case "
     "cases capa capas bag encordoamento encordoamentos baqueta baquetas acessorio acessorios".split()
 )
+EMPTY_CATEGORY_NOTICE = (
+    "The store carries this category but has no products in the catalog right now. "
+    "Say 'no momento não temos', never 'não vendemos'."
+)
+NOT_FOR_SALE_NOTICE = (
+    "These products match but are not for sale right now (see availability). Do not say they are "
+    "missing from the catalog; call get_product_details on one to get available alternatives."
+)
 ACCESSORY_NOTICE = (
     "The store sells only musical instruments, not accessories. Decline politely, do not "
     "suggest other stores, and offer help with instruments."
@@ -110,6 +118,21 @@ def _alternatives(products: pd.DataFrame, p: dict[str, Any]) -> list[dict[str, A
     return _summaries(pool.loc[sorted(rank, key=rank.get)[:MAX_ALTERNATIVES]])
 
 
+def _matching(
+    products: pd.DataFrame, query: str, max_price: float | None, min_price: float | None
+) -> pd.DataFrame:
+    """Products containing every query word within the price range, cheapest first."""
+    tokens = [t for t in sd.search_key(query).split() if t not in STOPWORDS]
+    products = products[
+        products["search_text"].map(lambda text: all(t in text for t in tokens))
+    ]
+    if max_price is not None:
+        products = products[products["effective_price"] <= Decimal(str(max_price))]
+    if min_price is not None:
+        products = products[products["effective_price"] >= Decimal(str(min_price))]
+    return products.sort_values("effective_price")
+
+
 def search_products(
     query: str = "",
     category: str | None = None,
@@ -117,7 +140,8 @@ def search_products(
     min_price: float | None = None,
     only_available: bool = True,
 ) -> dict[str, Any]:
-    """Search the instrument catalog for options, availability and price ranges.
+    """Search the instrument catalog for options, availability and price ranges. When the
+    customer names one specific product, use get_product_details instead.
 
     query matches name, brand and specs (e.g. "nylon", "Yamaha", "elétrico"). category takes
     terms like "violão", "guitarra", "baixo", "bateria", "teclado", "ukulele", "sopro", "violino".
@@ -130,39 +154,37 @@ def search_products(
     if category:
         ids = sd.resolve_category(category)
         if ids is None:
+            known = sorted(set(products["category"]))
             return {
                 "error": f"Unknown category '{category}'.",
-                "known_categories": sorted(set(products["category"])),
+                "known_categories": known,
             }
         products = products[products["category_id"].isin(ids)]
         if products.empty:
-            return {
-                "showing": "0 of 0",
-                "notice": "The store carries this category but has no products in the catalog right now. "
-                "Say 'no momento não temos', never 'não vendemos'.",
-            }
-    tokens = [t for t in sd.search_key(query).split() if t not in STOPWORDS]
-    products = products[
-        products["search_text"].map(lambda text: all(t in text for t in tokens))
-    ]
-    if only_available:
-        products = products[products["availability"] == "available"]
-    if max_price is not None:
-        products = products[products["effective_price"] <= Decimal(str(max_price))]
-    if min_price is not None:
-        products = products[products["effective_price"] >= Decimal(str(min_price))]
-    products = products.sort_values("effective_price")
-    shown = products.head(MAX_SEARCH_RESULTS)
-    return {
-        "showing": f"{len(shown)} of {len(products)}",
-        "products": _summaries(shown),
-    }
+            return {"showing": "0 of 0", "notice": EMPTY_CATEGORY_NOTICE}
+    matching = _matching(products, query, max_price, min_price)
+    found = (
+        matching[matching["availability"] == "available"]
+        if only_available
+        else matching
+    )
+    if found.empty and not matching.empty:
+        # Never let a filter make an existing product look missing from the catalog.
+        not_for_sale = _summaries(matching.head(MAX_ALTERNATIVES))
+        return {
+            "showing": "0 of 0",
+            "not_for_sale": not_for_sale,
+            "notice": NOT_FOR_SALE_NOTICE,
+        }
+    shown = found.head(MAX_SEARCH_RESULTS)
+    return {"showing": f"{len(shown)} of {len(found)}", "products": _summaries(shown)}
 
 
 def get_product_details(name_or_id: str) -> dict[str, Any]:
     """Get one product's full details: price (promotion with original price and discount, or the
     PIX price), maximum interest-free installments, specs, ended promotions and, when it is not
-    for sale, up to 3 available alternatives. Accepts an id or an approximate name such as
+    for sale, up to 3 available alternatives. Use it whenever the customer names a specific
+    product, even one that may be out of stock. Accepts an id or an approximate name such as
     "Takamine GD20". If several products match, returns the candidates: ask which one.
     """
     products = cached_store().products
