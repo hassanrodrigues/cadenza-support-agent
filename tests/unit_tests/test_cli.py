@@ -18,11 +18,32 @@ from cadenza.context import Context, parse_now
     ],
 )
 def test_config_error_explains_what_is_missing(monkeypatch, model, env, expected):
+    monkeypatch.setattr(cli, "load_chat_model", lambda name: None)
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     for key, value in env.items():
         monkeypatch.setenv(key, value)
     error = cli.config_error(model)
     assert error is None if expected is None else expected in error
+
+
+def test_missing_provider_package_says_which_extra_to_install(monkeypatch):
+    def missing(name):
+        raise ImportError(
+            "Initializing ChatOllama requires the langchain-ollama package."
+        )
+
+    monkeypatch.setattr(cli, "load_chat_model", missing)
+    assert cli.config_error("ollama/qwen3:8b") == (
+        "The package for provider 'ollama' is not installed: uv sync --extra ollama."
+    )
+
+
+def test_unknown_provider_is_reported_without_a_traceback(monkeypatch):
+    def unsupported(name):
+        raise ValueError("Unsupported model_provider='nope'.")
+
+    monkeypatch.setattr(cli, "load_chat_model", unsupported)
+    assert cli.config_error("nope/model").startswith("Cannot use MODEL=nope/model")
 
 
 def test_missing_key_exits_with_one_clear_line(monkeypatch, capsys):

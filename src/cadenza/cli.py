@@ -14,7 +14,7 @@ from rich.text import Text
 from cadenza import prompts
 from cadenza.context import ROOT_DIR, RUNTIME_DIR, Context
 from cadenza.graph import run_turn
-from cadenza.utils import get_message_text
+from cadenza.utils import get_message_text, load_chat_model
 
 MAX_MESSAGE_CHARS = 2000
 EXIT_COMMANDS = {"/sair", "/exit", "/quit"}
@@ -26,6 +26,15 @@ PROVIDER_KEYS = {
     "groq": "GROQ_API_KEY",
     "openrouter": "OPENROUTER_API_KEY",
 }
+# pyproject extra that installs each provider's LangChain package.
+PROVIDER_EXTRAS = {
+    "openai": "openai",
+    "google_genai": "google",
+    "groq": "groq",
+    "openrouter": "openrouter",
+    "bedrock_converse": "aws",
+    "ollama": "ollama",
+}
 
 
 def config_error(model: str) -> str | None:
@@ -36,6 +45,14 @@ def config_error(model: str) -> str | None:
     key = PROVIDER_KEYS.get(provider)
     if key and not os.environ.get(key):
         return f"{key} is not set: copy .env.example to .env and set your key."
+    try:
+        load_chat_model(model)  # builds the client only; no request is sent
+    except ImportError:
+        extra = PROVIDER_EXTRAS.get(provider)
+        hint = f"uv sync --extra {extra}" if extra else "install its LangChain package"
+        return f"The package for provider '{provider}' is not installed: {hint}."
+    except ValueError as error:
+        return f"Cannot use MODEL={model}: {error}"
     return None
 
 
