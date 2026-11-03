@@ -9,6 +9,7 @@ from typing import Any
 import pandas as pd
 from rapidfuzz import fuzz
 
+from cadenza import prompts
 from cadenza import store_data as sd
 from cadenza.context import DATA_DIR
 
@@ -200,9 +201,11 @@ def get_product_details(name_or_id: str) -> dict[str, Any]:
     details = {
         **_summary(p),
         "category": p["category"],
-        "installments": f"até {count}x de {sd.format_brl(value)} sem juros"
+        "installments": prompts.INSTALLMENTS_LABEL.format(
+            count=count, value=sd.format_brl(value)
+        )
         if count > 1
-        else "somente à vista",
+        else prompts.CASH_ONLY_LABEL,
         "specs": p["specs"],
     }
     if not p["description_conflict"]:

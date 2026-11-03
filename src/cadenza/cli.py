@@ -17,7 +17,7 @@ from cadenza.graph import run_turn
 from cadenza.utils import get_message_text, load_chat_model
 
 MAX_MESSAGE_CHARS = 2000
-CUSTOMER_PROMPT = "[bold cyan]Você:[/] "
+CUSTOMER_PROMPT = f"[bold cyan]{prompts.CUSTOMER_LABEL}:[/] "
 EXIT_COMMANDS = {"/sair", "/exit", "/quit"}
 # Keys we can check before the first call; Ollama and Bedrock authenticate differently.
 PROVIDER_KEYS = {
@@ -61,7 +61,10 @@ def say(console: Console, text: str) -> None:
     """Print one CaduAI message."""
     # assemble() styles only the label, and plain text keeps the model's brackets from being
     # read as rich markup.
-    console.print(Text.assemble(("CaduAI: ", "bold magenta"), text), end="\n\n")
+    console.print(
+        Text.assemble((f"{prompts.ASSISTANT_LABEL}: ", "bold magenta"), text),
+        end="\n\n",
+    )
 
 
 def chat(console: Console, context: Context) -> None:
@@ -84,7 +87,7 @@ def chat(console: Console, context: Context) -> None:
             if len(text) > MAX_MESSAGE_CHARS:
                 say(console, prompts.MESSAGE_TOO_LONG)
                 continue
-            with console.status("CaduAI está digitando..."):
+            with console.status(prompts.TYPING):
                 added = run_turn(text, context, thread_id)
             say(console, get_message_text(added[-1]))
         except (EOFError, KeyboardInterrupt):

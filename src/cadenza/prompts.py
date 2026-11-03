@@ -91,6 +91,26 @@ API_ERROR_REPLY = (
     "Estou com uma instabilidade agora e não consegui responder. Tente de novo em instantes "
     f"ou fale com a nossa equipe no WhatsApp {OFFICIAL_WHATSAPP}."
 )
+# Labels the tools return and the CLI prints; the customer sees them as they are.
+ASSISTANT_LABEL = "CaduAI"
+CUSTOMER_LABEL = "Você"
+TYPING = "CaduAI está digitando..."
+ORDER_STATUS_LABELS = {
+    "pending": "pendente",
+    "confirmed": "confirmado",
+    "shipped": "enviado",
+    "delivered": "entregue",
+    "cancelled": "cancelado",
+}
+PAYMENT_LABELS = {
+    "pix": "PIX",
+    "debit": "cartão de débito",
+    "boleto": "boleto bancário",
+}
+CREDIT_CARD_LABEL = "cartão de crédito em {installments}"
+INSTALLMENTS_LABEL = "até {count}x de {value} sem juros"
+CASH_ONLY_LABEL = "somente à vista"
+TICKET_RESPONSE_TIME = "até 24 horas úteis"
 CLI_HELP = "Digite /new para começar uma nova conversa ou /sair para encerrar."
 NEW_CONVERSATION = "Nova conversa"
 GOODBYE = "Até mais! Quando precisar, é só chamar."
