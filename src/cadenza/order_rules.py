@@ -12,6 +12,7 @@ REGRET_DAYS = 7  # manual 4.1, counted from delivery
 DEFECT_DAYS = 30  # manual 4.2, counted from purchase
 PREFERENCE_DAYS = 7  # manual 4.3, read as counted from delivery
 LEGAL_WARRANTY_DAYS = 90  # manual 8.1, counted from delivery
+EMAIL_RE = re.compile(r"[^@\s]+@[^@\s]+\.[^@\s]+")
 
 
 @dataclass(frozen=True)
@@ -31,10 +32,18 @@ def normalize_phone(raw: str) -> str | None:
     return digits if len(digits) in (10, 11) else None
 
 
+def is_valid_contact(contact: str) -> bool:
+    """An e-mail address or a full Brazilian phone with area code."""
+    contact = contact.strip()
+    return bool(EMAIL_RE.fullmatch(contact)) or normalize_phone(contact) is not None
+
+
 def find_customer_ids(customers: pd.DataFrame, contact: str) -> list[int] | None:
     """Customers matching an e-mail or a full phone; None when the contact is not usable."""
     contact = contact.strip().lower()
     if "@" in contact:
+        if not EMAIL_RE.fullmatch(contact):
+            return None
         mask = customers["email"] == contact
     else:
         phone = normalize_phone(contact)

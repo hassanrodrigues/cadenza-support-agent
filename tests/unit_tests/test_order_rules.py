@@ -46,3 +46,21 @@ def test_return_windows_are_inclusive_and_use_the_right_start_date():
     assert not day_after["regret_return"].eligible
     assert not day_after["preference_exchange"].eligible
     assert day_after["defect_exchange"].eligible
+
+
+@pytest.mark.parametrize(
+    ("contact", "valid"),
+    [
+        ("leticia.rocha@jmail.com", True),
+        ("(67) 99789-0123", True),
+        ("abc", False),
+        ("leticia@", False),
+        ("99789-0123", False),
+    ],
+)
+def test_valid_contact_is_an_email_or_a_full_phone(contact, valid):
+    assert rules.is_valid_contact(contact) is valid
+
+
+def test_malformed_email_is_not_looked_up(customers):
+    assert rules.find_customer_ids(customers, "lucas.mendes@") is None

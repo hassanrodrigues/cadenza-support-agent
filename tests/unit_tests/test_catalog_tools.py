@@ -121,3 +121,13 @@ def test_alternatives_prefer_the_same_string_type_before_price():
     # GF-3D is a steel-string guitar; the nylon Yamaha C70 is closer in price but a different instrument.
     alternatives = catalog.get_product_details("Giannini GF-3D")["alternatives"]
     assert ids({"a": alternatives}, "a") == [107, 86, 91]
+
+
+def test_accessory_searches_are_answered_with_a_not_sold_notice():
+    for query, category in (("palhetas", None), ("cabo p10", None), ("", "acessórios")):
+        result = catalog.search_products(query=query, category=category)
+        assert result["notice"] == catalog.ACCESSORY_NOTICE
+
+
+def test_seven_string_guitars_are_not_mistaken_for_strings():
+    assert catalog.search_products(query="violão 7 cordas")["products"]

@@ -18,6 +18,16 @@ MAX_CANDIDATES = 5
 FUZZY_MIN_SCORE = 80
 FUZZY_AMBIGUITY_MARGIN = 5
 STOPWORDS = set("a o as os de da do das dos e em com para um uma".split())
+# Accessories the store does not sell (manual 1 and 7.1). "cordas" is left out on purpose:
+# it also names 7-string guitars ("violão 7 cordas").
+ACCESSORY_TERMS = set(
+    "palheta palhetas cabo cabos pedal pedais pedaleira amplificador amplificadores amp case "
+    "cases capa capas bag encordoamento encordoamentos baqueta baquetas acessorio acessorios".split()
+)
+ACCESSORY_NOTICE = (
+    "The store sells only musical instruments, not accessories. Decline politely, do not "
+    "suggest other stores, and offer help with instruments."
+)
 
 
 @cache
@@ -114,6 +124,8 @@ def search_products(
     Price filters use the price the customer pays today (the promotional price when there is one).
     Returns up to 8 products sorted by price and the total number of matches.
     """
+    if ACCESSORY_TERMS & set(sd.search_key(f"{query} {category or ''}").split()):
+        return {"showing": "0 of 0", "notice": ACCESSORY_NOTICE}
     products = cached_store().products
     if category:
         ids = sd.resolve_category(category)

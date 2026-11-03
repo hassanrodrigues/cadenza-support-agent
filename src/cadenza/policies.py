@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import unicodedata
 from dataclasses import dataclass, field
+from datetime import datetime, time, timedelta
 from pathlib import Path
 
 from pypdf import PdfReader
@@ -28,6 +29,9 @@ TOPIC_SECTIONS = {
     "garantia": ("8",),
     "privacidade": ("9",),
 }
+
+# Manual section 2, by weekday (Monday is 0). Sunday is closed; holidays are not detected yet.
+OPENING_HOURS = {0: (9, 18), 1: (9, 18), 2: (9, 18), 3: (9, 18), 4: (9, 18), 5: (9, 13)}
 
 # How the code resolves conflicts inside a topic, sent along with the manual text.
 TOPIC_NOTES = {
@@ -97,3 +101,17 @@ def topic_text(sections: list[Section], topic: str) -> str:
     roots = TOPIC_SECTIONS[topic]
     chosen = [s for s in sections if s.number.split(".")[0] in roots]
     return "\n\n".join(s.text for s in chosen)
+
+
+def next_opening(now: datetime) -> datetime:
+    """When the team is next available: `now` itself while the store is open."""
+    for offset in range(8):
+        day = now.date() + timedelta(days=offset)
+        hours = OPENING_HOURS.get(day.weekday())
+        if hours is None:
+            continue
+        opens = datetime.combine(day, time(hours[0]), tzinfo=now.tzinfo)
+        closes = datetime.combine(day, time(hours[1]), tzinfo=now.tzinfo)
+        if now < closes:
+            return max(opens, now)
+    raise AssertionError("OPENING_HOURS must open at least once a week")

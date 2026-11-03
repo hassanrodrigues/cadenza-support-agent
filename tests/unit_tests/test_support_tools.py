@@ -127,3 +127,20 @@ def test_ticket_without_contact_is_not_opened(tmp_path, monkeypatch, at):
     )
     assert "error" in result
     assert not path.exists()
+
+
+def test_ticket_needs_a_valid_contact(tmp_path, monkeypatch, at):
+    path = tmp_path / "tickets.jsonl"
+    monkeypatch.setattr(support, "TICKETS_PATH", path)
+    refused = support.open_support_ticket(
+        "complaint", "produto chegou riscado", "abc", runtime=at("2026-02-20T10:00")
+    )
+    assert "DDD" in refused["error"]
+    assert not path.exists()
+    opened = support.open_support_ticket(
+        "complaint",
+        "produto chegou riscado",
+        "(67) 99789-0123",
+        runtime=at("2026-02-20T10:00"),
+    )
+    assert opened["protocol"].startswith("EM-20260220-")
