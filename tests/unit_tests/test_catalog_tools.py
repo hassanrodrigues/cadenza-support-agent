@@ -115,3 +115,9 @@ def test_tool_results_are_plain_json():
         catalog.list_active_promotions(),
     ):
         json.dumps(result)
+
+
+def test_alternatives_prefer_the_same_string_type_before_price():
+    # GF-3D is a steel-string guitar; the nylon Yamaha C70 is closer in price but a different instrument.
+    alternatives = catalog.get_product_details("Giannini GF-3D")["alternatives"]
+    assert ids({"a": alternatives}, "a") == [107, 86, 91]

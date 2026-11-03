@@ -84,15 +84,20 @@ def _match_products(products: pd.DataFrame, name_or_id: str) -> list[int]:
 
 
 def _alternatives(products: pd.DataFrame, p: dict[str, Any]) -> list[dict[str, Any]]:
-    """Available products in the same category, closest in price first."""
+    """Available products in the same category: same string type first, then closest price."""
     pool = products[
         (products["category_id"] == p["category_id"])
         & (products["availability"] == "available")
     ]
-    distance = pool["effective_price"].map(
-        lambda price: abs(price - p["effective_price"])
-    )
-    return _summaries(pool.loc[distance.sort_values().index[:MAX_ALTERNATIVES]])
+    strings = p["specs"].get("strings")  # nylon/steel, or string count on basses
+    rank = {
+        pid: (
+            q["specs"].get("strings") != strings,
+            abs(q["effective_price"] - p["effective_price"]),
+        )
+        for pid, q in pool.iterrows()
+    }
+    return _summaries(pool.loc[sorted(rank, key=rank.get)[:MAX_ALTERNATIVES]])
 
 
 def search_products(
