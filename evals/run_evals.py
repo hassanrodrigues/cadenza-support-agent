@@ -108,7 +108,7 @@ def cost(results: list[Result]) -> Decimal:
 
 
 def report(results: list[Result], model: str) -> str:
-    """Markdown report: summary, one row per case, then every failure with its reply."""
+    """Markdown report: summary, one row per case, failures, then every conversation."""
     suites = ("functional", "adversarial")
     passed = {s: [r for r in results if r.case["suite"] == s] for s in suites}
     lines = [
@@ -152,6 +152,16 @@ def report(results: list[Result], model: str) -> str:
             *(f"> {line}" for line in r.replies[-1].splitlines()),
             "",
         ]
+    lines += ["## Conversations", ""]
+    for r in results:
+        verdict = "pass" if not r.failures else "fail"
+        lines += [
+            f"<details><summary>{r.case['id']}: {r.case['title']} ({verdict})</summary>",
+            "",
+        ]
+        for text, reply in zip(r.case["turns"], r.replies):
+            lines += [f"**Customer:** {text}", "", f"**CaduAI:** {reply}", ""]
+        lines += ["</details>", ""]
     return "\n".join(lines).rstrip() + "\n"
 
 
