@@ -2,17 +2,35 @@
 
 from __future__ import annotations
 
+import json
+import logging
+import uuid
 from datetime import date
 from decimal import Decimal
 from functools import cache
-from typing import Any
+from typing import Any, Literal
 
 import pandas as pd
 from langchain.tools import ToolRuntime
 from rapidfuzz import fuzz
 
+from cadenza import policies
 from cadenza import store_data as sd
-from cadenza.context import DATA_DIR, Context
+from cadenza.context import DATA_DIR, RUNTIME_DIR, Context
+
+logger = logging.getLogger(__name__)
+
+PolicyTopic = Literal[
+    "sobre_a_loja",
+    "horario",
+    "pagamento",
+    "trocas_devolucoes",
+    "frete_entregas",
+    "promocoes",
+    "garantia",
+    "privacidade",
+]
+TicketKind = Literal["complaint", "human_agent"]
 
 MAX_SEARCH_RESULTS = 8
 MAX_ALTERNATIVES = 3
@@ -36,12 +54,21 @@ ORDER_NOT_FOUND = (
     "No order found for this contact. Do not say whether the order exists; ask the customer "
     "to check the e-mail or phone used in the purchase."
 )
+MAX_TICKET_SUMMARY = 500
+MAX_TICKET_CONTACT = 120
+TICKETS_PATH = RUNTIME_DIR / "tickets.jsonl"
+TICKET_RESPONSE_TIME = "até 24 horas úteis"
 STOPWORDS = set("a o as os de da do das dos e em com para um uma".split())
 
 
 @cache
 def _store() -> sd.Store:
     return sd.load_store(DATA_DIR)
+
+
+@cache
+def _manual() -> list[policies.Section]:
+    return policies.load_manual(DATA_DIR / "store_policies.pdf")
 
 
 def _price_fields(p: dict[str, Any]) -> dict[str, str]:
@@ -275,4 +302,59 @@ def lookup_orders(
     return {"orders": [_order_view(o, today) for o in orders.to_dict("records")]}
 
 
-TOOLS = [search_products, get_product_details, list_active_promotions, lookup_orders]
+def get_store_policy(topic: PolicyTopic) -> dict[str, Any]:
+    """Read the store manual on one topic: sobre_a_loja (address, contacts, company data),
+    horario (opening hours), pagamento (payment methods, installment rules), trocas_devolucoes
+    (returns and exchanges), frete_entregas (shipping), promocoes (promotion rules), garantia
+    (warranty), privacidade (personal data, LGPD).
+    """
+    result = {"topic": topic, "text": policies.topic_text(_manual(), topic)}
+    if topic in policies.TOPIC_NOTES:
+        result["note"] = policies.TOPIC_NOTES[topic]
+    return result
+
+
+def open_support_ticket(
+    kind: TicketKind,
+    summary: str,
+    contact: str,
+    order_id: int | None = None,
+    *,
+    runtime: ToolRuntime[Context],
+) -> dict[str, Any]:
+    """Open a ticket for a complaint or a request to talk to a person. Collect a short summary
+    and the customer's e-mail or phone first. Returns the protocol number and the response time.
+    """
+    summary, contact = (
+        summary.strip()[:MAX_TICKET_SUMMARY],
+        contact.strip()[:MAX_TICKET_CONTACT],
+    )
+    if not summary or not contact:
+        return {
+            "error": "Ask for a short summary of the issue and an e-mail or phone first."
+        }
+    now = runtime.context.now
+    protocol = f"EM-{now:%Y%m%d}-{uuid.uuid4().hex[:6].upper()}"
+    record = {
+        "protocol": protocol,
+        "created_at": now.isoformat(),
+        "kind": kind,
+        "summary": summary,
+        "contact": contact,
+        "order_id": order_id,
+    }
+    TICKETS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with TICKETS_PATH.open("a", encoding="utf-8") as file:
+        file.write(json.dumps(record, ensure_ascii=False) + "\n")
+    logger.info("Support ticket %s opened (%s)", protocol, kind)
+    return {"protocol": protocol, "response_time": TICKET_RESPONSE_TIME}
+
+
+TOOLS = [
+    search_products,
+    get_product_details,
+    list_active_promotions,
+    lookup_orders,
+    get_store_policy,
+    open_support_ticket,
+]

@@ -1,7 +1,9 @@
 import json
+import re
 from types import SimpleNamespace
+from typing import get_args
 
-from cadenza import tools
+from cadenza import policies, tools
 from cadenza.context import Context, parse_now
 
 
@@ -202,3 +204,47 @@ def test_tool_schemas_hide_the_injected_runtime():
     node = ToolNode(tools.TOOLS, handle_tool_errors=True)
     schema = node.tools_by_name["lookup_orders"].tool_call_schema.model_json_schema()
     assert set(schema["properties"]) == {"contact", "order_id"}
+
+
+def test_policy_topics_match_the_manual_mapping():
+    assert set(get_args(tools.PolicyTopic)) == set(policies.TOPIC_SECTIONS)
+
+
+def test_policy_lookup_returns_manual_text_and_resolution_note():
+    assert "09:00 às 18:00" in tools.get_store_policy("horario")["text"]
+    payment = tools.get_store_policy("pagamento")
+    assert "3.1 Regras de Parcelamento" in payment["text"]
+    assert "prevails" in payment["note"]
+
+
+def test_ticket_is_saved_with_bounded_fields_and_returns_a_protocol(
+    tmp_path, monkeypatch
+):
+    path = tmp_path / "tickets.jsonl"
+    monkeypatch.setattr(tools, "TICKETS_PATH", path)
+    result = tools.open_support_ticket(
+        "complaint",
+        "x" * 2000,
+        "leticia.rocha@jmail.com",
+        order_id=7,
+        runtime=runtime_at("2026-02-20T10:00"),
+    )
+    assert re.fullmatch(r"EM-20260220-[0-9A-F]{6}", result["protocol"])
+    assert result["response_time"] == "até 24 horas úteis"
+    saved = json.loads(path.read_text(encoding="utf-8"))
+    assert saved["protocol"] == result["protocol"]
+    assert len(saved["summary"]) == tools.MAX_TICKET_SUMMARY
+    assert saved["order_id"] == 7
+
+
+def test_ticket_without_contact_is_not_opened(tmp_path, monkeypatch):
+    path = tmp_path / "tickets.jsonl"
+    monkeypatch.setattr(tools, "TICKETS_PATH", path)
+    result = tools.open_support_ticket(
+        "human_agent",
+        "quero falar com alguém",
+        "  ",
+        runtime=runtime_at("2026-02-20T10:00"),
+    )
+    assert "error" in result
+    assert not path.exists()
