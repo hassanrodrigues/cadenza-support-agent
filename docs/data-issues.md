@@ -1,6 +1,6 @@
 # Data issues and assumptions
 
-I profiled the six CSVs and the policy manual before writing any code. Each conflict below is resolved in code, not left to the model, and has a test.
+I profiled the six CSVs and the policy manual before writing any code. Most conflicts below are resolved in code and tested; the Where column shows the ones handled in the prompt or only documented.
 
 ## Catalog and promotions
 
@@ -21,7 +21,7 @@ I profiled the six CSVs and the policy manual before writing any code. Each conf
 | Issue | Evidence | Decision | Where |
 |---|---|---|---|
 | Totals differ from the current prices | Order 3: R$ 3,450 against 2 × R$ 1,749. Order 20 (cancelled): R$ 1,400 against R$ 1,488. `order_items` has no unit price | The agent reports the recorded `total_brl` and never recalculates: without unit prices, there's nothing to audit against | `support._order_view` |
-| Old orders break the installment rules | Order 9: 6x R$ 58.32. Order 16: 6x R$ 71.65. Order 18: 12x R$ 38.32 | Historical data; the agent doesn't reprocess past orders | none, documented only |
+| Old orders break the installment rules | Order 9: 6x R$ 58.32. Order 16: 6x R$ 71.65. Order 18: 12x R$ 38.33 | Historical data; the agent doesn't reprocess past orders | none, documented only |
 | Delivery date | Only `estimated_delivery` exists, and only for shipped and delivered orders | Assumption: every order is an online purchase (they all have shipping), and the delivery date is `estimated_delivery` | `order_rules.return_windows` |
 | Overdue shipment | Order 8 is `shipped` with an estimate of 28/02/2026 | Flagged `delivery_overdue` when the estimate has passed | `test_shipped_order_past_its_estimate_is_flagged_overdue`, eval F09 |
 | Orders after "now" | The dataset runs to 22/03/2026 | Orders dated after the session's reference time are ignored | `test_orders_after_the_reference_time_are_ignored` |
