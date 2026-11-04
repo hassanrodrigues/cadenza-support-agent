@@ -132,3 +132,9 @@ def test_only_the_label_of_a_reply_is_styled(monkeypatch):
     assert text.plain == "CaduAI: Olá [cliente]"
     assert not text.style
     assert [(span.start, span.end) for span in text.spans] == [(0, len("CaduAI: "))]
+
+
+def test_control_characters_from_the_model_are_removed():
+    console = Console(file=io.StringIO(), width=200)
+    cli.say(console, "Olá\x1b]0;hacked\x07 cliente\x1b[2J\nTchau")
+    assert console.file.getvalue() == "CaduAI: Olá]0;hacked cliente[2J\nTchau\n\n"

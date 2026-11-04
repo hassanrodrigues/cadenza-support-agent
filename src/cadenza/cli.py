@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import sys
 import uuid
 
@@ -18,6 +19,8 @@ from cadenza.utils import get_message_text, load_chat_model
 
 CUSTOMER_PROMPT = f"[bold cyan]{prompts.CUSTOMER_LABEL}:[/] "
 EXIT_COMMANDS = {"/sair", "/exit", "/quit"}
+# Control characters (ESC included) could move the cursor or change the terminal; keep \t and \n.
+CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f-\x9f]")
 # For whoever runs the CLI: the customer only sees the fallback reply.
 MODEL_FAILED = "Model call failed; see runtime/cadenza.log"
 # Keys we can check before the first call; Ollama and Bedrock authenticate differently.
@@ -62,6 +65,7 @@ def say(console: Console, text: str) -> None:
     """Print one CaduAI message."""
     # assemble() styles only the label, and plain text keeps the model's brackets from being
     # read as rich markup.
+    text = CONTROL_CHARS.sub("", text)
     console.print(
         Text.assemble((f"{prompts.ASSISTANT_LABEL}: ", "bold magenta"), text),
         end="\n\n",
