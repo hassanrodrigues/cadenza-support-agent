@@ -51,7 +51,10 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 
 - **Without uv.** Linux/macOS: `python3 -m venv .venv && source .venv/bin/activate && pip install -e . pytest && cadenza`. Windows: `python -m venv .venv`, `.venv\Scripts\activate`, `pip install -e . pytest`, `cadenza`. Tests: `python -m pytest tests/unit_tests -q`. Only the editable install is supported, because the code finds `data/` from the repository root.
 - **Tests only, no key.** `uv run pytest tests/unit_tests` (195 tests; the 3 for the web page are skipped without `--extra ui`) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
-- **In the browser.** `uv run --extra ui streamlit run src/cadenza/web.py` opens a basic chat page on the same agent, with the same key and `EMPORIO_NOW` ([screenshot](docs/web-ui.png)).
+- **In the browser.** `uv run --extra ui streamlit run src/cadenza/web.py` opens a basic chat page on the same agent, with the same key and `EMPORIO_NOW`.
+
+  <img src="docs/web-ui.png" alt="The optional web page: a promotion question answered with the original price, the discount and no PIX on top" width="720">
+
 - **Just read.** [`examples/`](examples/) and [`evals/results.md`](evals/results.md) show real runs.
 - **Re-run the eval or the examples.** `uv run python evals/run_evals.py` (about a minute, US$ 0.015) and `uv run python scripts/generate_examples.py` (under a cent). Prices: US$ 0.10 per million input tokens and US$ 0.50 per million output tokens for Claude Haiku 5.5 with prompts under 100k tokens ([Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing)); adaptive thinking is billed as output.
 - **Another provider.** Set `MODEL=provider/model` in `.env`, install the extra once (`uv sync --extra ollama`, for example) and set that provider's key. If the package is missing, the CLI tells you which extra to install.
