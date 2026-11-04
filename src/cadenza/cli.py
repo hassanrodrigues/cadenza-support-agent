@@ -19,6 +19,8 @@ from cadenza.utils import get_message_text, load_chat_model
 MAX_MESSAGE_CHARS = 2000
 CUSTOMER_PROMPT = f"[bold cyan]{prompts.CUSTOMER_LABEL}:[/] "
 EXIT_COMMANDS = {"/sair", "/exit", "/quit"}
+# For whoever runs the CLI: the customer only sees the fallback reply.
+MODEL_FAILED = "Model call failed; see runtime/cadenza.log"
 # Keys we can check before the first call; Ollama and Bedrock authenticate differently.
 PROVIDER_KEYS = {
     "anthropic": "ANTHROPIC_API_KEY",
@@ -89,7 +91,10 @@ def chat(console: Console, context: Context) -> None:
                 continue
             with console.status(prompts.TYPING):
                 added = run_turn(text, context, thread_id)
-            say(console, get_message_text(added[-1]))
+            reply = get_message_text(added[-1])
+            say(console, reply)
+            if reply == prompts.API_ERROR_REPLY:
+                print(MODEL_FAILED, file=sys.stderr)
         except (EOFError, KeyboardInterrupt):
             console.print()
             break

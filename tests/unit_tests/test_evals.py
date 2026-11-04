@@ -2,7 +2,9 @@ import json
 from decimal import Decimal
 
 import pytest
+from langchain_core.messages import AIMessage
 
+from cadenza import prompts
 from cadenza.context import ROOT_DIR
 from evals import run_evals
 
@@ -52,3 +54,13 @@ def test_case_file_has_ten_functional_and_five_adversarial_cases():
     assert suites.count("adversarial") == 5
     assert len({c["id"] for c in cases}) == len(cases)
     assert all(c["turns"] and c["now"] for c in cases)
+
+
+def test_failed_model_call_aborts_the_run(monkeypatch):
+    def failed_turn(text, context, thread):
+        return [AIMessage(prompts.API_ERROR_REPLY)]
+
+    monkeypatch.setattr(run_evals, "run_turn", failed_turn)
+    case = {"id": "F01", "now": "2026-02-20T10:00", "turns": ["oi"]}
+    with pytest.raises(SystemExit, match="F01: model call failed"):
+        run_evals.run_case(case)

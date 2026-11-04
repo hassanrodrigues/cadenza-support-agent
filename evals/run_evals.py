@@ -18,6 +18,7 @@ from typing import Any
 
 from dotenv import load_dotenv
 
+from cadenza import prompts
 from cadenza.cli import config_error
 from cadenza.context import ROOT_DIR, Context, parse_now
 from cadenza.graph import run_turn, token_usage, tool_calls
@@ -85,6 +86,9 @@ def run_case(case: dict[str, Any]) -> Result:
     for text in case["turns"]:
         added = run_turn(text, context, thread)
         replies.append(get_message_text(added[-1]))
+        if replies[-1] == prompts.API_ERROR_REPLY:
+            # A failed call is not a model answer: stop before writing a misleading report.
+            sys.exit(f"{case['id']}: model call failed; results.md was not written.")
         tools += tool_calls(added)
         used_in, used_out = token_usage(added)
         tokens_in, tokens_out = tokens_in + used_in, tokens_out + used_out

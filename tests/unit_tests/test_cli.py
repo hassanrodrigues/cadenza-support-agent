@@ -58,13 +58,13 @@ def test_missing_key_exits_with_one_clear_line(monkeypatch, capsys):
     )
 
 
-def run_chat(monkeypatch, lines):
+def run_chat(monkeypatch, lines, reply=None):
     """Drive the chat loop with scripted input; return the output and the turns sent."""
     sent = []
 
     def fake_turn(text, context, thread_id):
         sent.append((text, thread_id))
-        return [AIMessage(f"resposta para {text}")]
+        return [AIMessage(reply or f"resposta para {text}")]
 
     feed = iter(lines)
 
@@ -93,6 +93,17 @@ def test_long_messages_are_refused_before_reaching_the_model(monkeypatch):
     output, sent = run_chat(monkeypatch, ["x" * (cli.MAX_MESSAGE_CHARS + 1), "/sair"])
     assert prompts.MESSAGE_TOO_LONG in output
     assert sent == []
+
+
+def test_failed_model_call_is_reported_on_stderr(monkeypatch, capsys):
+    output, _ = run_chat(monkeypatch, ["oi", "/sair"], reply=prompts.API_ERROR_REPLY)
+    assert prompts.API_ERROR_REPLY in output
+    assert capsys.readouterr().err.strip() == cli.MODEL_FAILED
+
+
+def test_normal_reply_writes_nothing_on_stderr(monkeypatch, capsys):
+    run_chat(monkeypatch, ["oi", "/sair"])
+    assert capsys.readouterr().err == ""
 
 
 def test_new_command_starts_a_separate_conversation(monkeypatch):
