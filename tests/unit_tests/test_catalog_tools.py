@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 from cadenza.tools import catalog
 
 
@@ -44,10 +46,23 @@ def test_search_in_empty_category_says_not_right_now():
     assert "no momento não temos" in result["notice"]
 
 
-def test_search_with_unknown_category_lists_known_ones():
+def test_search_with_unknown_category_lists_every_category():
     result = catalog.search_products(category="pandeiro")
     assert "error" in result
-    assert "Violões" in result["known_categories"]
+    assert len(result["known_categories"]) == 9
+    assert "Cordas Orquestrais" in result["known_categories"]
+
+
+@pytest.mark.parametrize("name", catalog.cached_store().categories["name"].tolist())
+def test_every_suggested_category_name_is_accepted(name):
+    result = catalog.search_products(category=name)
+    assert "error" not in result
+
+
+@pytest.mark.parametrize("term", ["flautas", "saxofone", "trompete", "viola"])
+def test_empty_category_terms_say_not_right_now(term):
+    result = catalog.search_products(category=term)
+    assert "no momento não temos" in result["notice"]
 
 
 def test_details_show_price_pix_installments_and_ended_promotion():

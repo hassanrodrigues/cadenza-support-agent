@@ -151,11 +151,12 @@ def search_products(
     """
     if ACCESSORY_TERMS & set(sd.search_key(f"{query} {category or ''}").split()):
         return {"showing": "0 of 0", "notice": ACCESSORY_NOTICE}
-    products = cached_store().products
+    store = cached_store()
+    products = store.products
     if category:
         ids = sd.resolve_category(category)
         if ids is None:
-            known = sorted(set(products["category"]))
+            known = store.categories["name"].tolist()
             return {
                 "error": f"Unknown category '{category}'.",
                 "known_categories": known,
