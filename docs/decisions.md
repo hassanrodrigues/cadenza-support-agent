@@ -44,7 +44,7 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 
 - **Choice.** Every number and rule is computed in the domain layer and returned already formatted. The model picks tools and writes the reply.
 - **Why.** A model that adds 5% or counts days will eventually get it wrong. In my first tests Haiku computed a "R$ 109,95 savings" on its own. It was correct, but nothing checked it.
-- **Cost.** More tool code to maintain, covered by 197 unit tests.
+- **Cost.** More tool code to maintain, covered by 194 unit tests (199 with the ui extra).
 - The review at the end of this file lists what is decided where.
 
 ## 6. Reference time and the tool runtime
@@ -63,7 +63,7 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 ## 8. Prompt strategy
 
 - **Choice.** A single prompt in English for every provider, with XML sections: `persona`, `store_rules`, `when_to_use_tools`, `security`, `response_format`, `current_context`.
-  - It ends with "Always reply to the customer in Brazilian Portuguese".
+  - It opens with "Always reply to the customer in Brazilian Portuguese".
   - Zero-shot: tool docstrings act as part of the prompt.
   - `current_context` carries the session time and whether the store is open, both computed once.
 - **Not used.**

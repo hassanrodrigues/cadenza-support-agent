@@ -73,6 +73,9 @@ def run_turn(
     text: str, context: Context, thread_id: str, max_steps: int = MAX_GRAPH_STEPS
 ) -> list[BaseMessage]:
     """Send one customer message and return the messages this turn added."""
+    if not text.strip():
+        # The API rejects whitespace-only text, and a saved blank turn would break every next one.
+        return [AIMessage(content=prompts.EMPTY_MESSAGE)]
     if len(text) > MAX_MESSAGE_CHARS:
         return [AIMessage(content=prompts.MESSAGE_TOO_LONG)]
     config: Any = {
