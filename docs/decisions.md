@@ -44,7 +44,7 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 
 - **Choice.** Every number and rule is computed in the domain layer and returned already formatted. The model picks tools and writes the reply.
 - **Why.** A model that adds 5% or counts days will eventually get it wrong. In my first tests Haiku computed a "R$ 109,95 savings" on its own. It was correct, but nothing checked it.
-- **Cost.** More tool code to maintain, covered by 156 unit tests.
+- **Cost.** More tool code to maintain, covered by 191 unit tests.
 - The review at the end of this file lists what is decided where.
 
 ## 6. Reference time and the tool runtime
