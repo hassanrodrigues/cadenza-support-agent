@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/hassanrodrigues/cadenza-support-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/hassanrodrigues/cadenza-support-agent/actions/workflows/ci.yml)
 
-Cadenza is a Python prototype of a text-message support agent for Empório da Música, a fictional instrument store in Campo Grande/MS. Claude Haiku 5.5 runs in a LangGraph ReAct loop and picks one of six tools; the tools compute prices, stock, order status and return deadlines from the store's CSVs and policy manual, and the model writes the reply in Brazilian Portuguese. My 15-case eval scored 14/15 on the first run, the failure exposed a real bug, and after the fix it scored 15/15 for US$ 0.013.
+Cadenza, named after the solo passage in a piece of music, is a Python prototype of a text-message support agent for Empório da Música, a fictional instrument store in Campo Grande/MS. Claude Haiku 5.5 runs in a LangGraph ReAct loop and picks one of six tools; the tools compute prices, stock, order status and return deadlines from the store's CSVs and policy manual, and the model writes the reply in Brazilian Portuguese. My 15-case eval scored 14/15 on the first run, the failure exposed a real bug, and after the fix it scored 15/15 for US$ 0.013.
 
 ![A real conversation in the terminal: a price, an ended promotion and an active one](examples/02-price-and-promotions.svg)
 
@@ -78,7 +78,7 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 | History in RAM (`MemorySaver`), one thread per session | A CLI conversation doesn't need to survive a restart | Lost on exit; `SqliteSaver` is a small swap |
 | CLI with `rich` | The brief says the focus is the agent working well | No web UI |
 
-The assistant introduces itself as **CaduAI**: "Cadu" is a common Brazilian nickname and a nod to the project name **Cadenza** (a solo passage in music), and the "AI" suffix discloses up front that customers are talking to a virtual assistant.
+The assistant introduces itself as **CaduAI**: "Cadu" is a common Brazilian nickname and a nod to the project name **Cadenza**, and the "AI" suffix discloses up front that customers are talking to a virtual assistant.
 
 The full reasoning (options, cost, when I'd change my mind), the prompt changelog and the code-vs-prompt review are in [`docs/decisions.md`](docs/decisions.md).
 
