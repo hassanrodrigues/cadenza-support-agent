@@ -110,7 +110,7 @@ def lookup_orders(
             "error": "This e-mail matches more than one customer. Ask for the phone number or the order number."
         }
     orders = store.orders[store.orders["customer_id"].isin(customer_ids)]
-    orders = orders[orders["order_date"].map(lambda day: day <= today)]
+    orders = orders[orders["order_date"] <= today]
     if order_id is not None:
         orders = orders[orders["order_id"] == order_id]
     if orders.empty:
