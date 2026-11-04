@@ -15,15 +15,18 @@ from cadenza.cli import config_error
 from cadenza.context import ROOT_DIR, Context
 from cadenza.utils import get_message_text
 
+AVATARS = {"assistant": "🎸", "user": "🙂"}
+
 
 def show(role: str, text: str) -> None:
     # Escape "$" so "R$ 10 ... R$ 20" is not rendered as a LaTeX formula.
-    st.chat_message(role).markdown(text.replace("$", r"\$"))
+    st.chat_message(role, avatar=AVATARS[role]).markdown(text.replace("$", r"\$"))
 
 
 load_dotenv(ROOT_DIR / ".env")
-st.set_page_config(page_title="CaduAI · Empório da Música")
-st.title("CaduAI · Empório da Música")
+st.set_page_config(page_title="CaduAI · Empório da Música", page_icon="🎸")
+st.title("🎸 CaduAI")
+st.caption(prompts.WEB_SUBTITLE)
 
 if "thread_id" not in st.session_state:
     try:
@@ -39,16 +42,27 @@ if "thread_id" not in st.session_state:
     st.session_state.history = [("assistant", prompts.GREETING)]
 
 with st.sidebar:
+    st.subheader("Empório da Música")
     st.caption(f"Model: {st.session_state.context.model}")
     st.caption(f"Store clock: {st.session_state.context.now:%d/%m/%Y %H:%M}")
-    if st.button(prompts.NEW_CONVERSATION):
+    if st.button(prompts.NEW_CONVERSATION, width="stretch"):
         st.session_state.clear()
         st.rerun()
 
 for role, text in st.session_state.history:
     show(role, text)
 
-if text := st.chat_input(prompts.WEB_INPUT_PLACEHOLDER):
+text = st.chat_input(prompts.WEB_INPUT_PLACEHOLDER)
+if len(st.session_state.history) == 1:
+    # Starter questions until the first message; a click sends it like typed text.
+    for column, (i, suggestion) in zip(
+        st.columns(len(prompts.WEB_SUGGESTIONS)), enumerate(prompts.WEB_SUGGESTIONS)
+    ):
+        label = suggestion.replace("$", r"\$")
+        if column.button(label, key=f"suggestion-{i}", width="stretch"):
+            text = suggestion
+
+if text:
     show("user", text)
     with st.spinner(prompts.TYPING):
         added = graph.run_turn(
@@ -57,3 +71,4 @@ if text := st.chat_input(prompts.WEB_INPUT_PLACEHOLDER):
     reply = get_message_text(added[-1])
     show("assistant", reply)
     st.session_state.history += [("user", text), ("assistant", reply)]
+    st.rerun()
