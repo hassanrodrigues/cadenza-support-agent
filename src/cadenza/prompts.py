@@ -137,6 +137,7 @@ WEB_SUGGESTIONS = (
 )
 GOODBYE = "Até mais! Quando precisar, é só chamar."
 MESSAGE_TOO_LONG = "Sua mensagem ficou bem longa. Pode resumir em até 2.000 caracteres?"
+EMPTY_MESSAGE = "Não recebi nenhuma mensagem. Como posso ajudar?"
 
 WEEKDAYS = (
     "Monday",

@@ -181,3 +181,13 @@ def test_long_messages_never_reach_the_model(monkeypatch):
     text = "x" * (graph.MAX_MESSAGE_CHARS + 1)
     added = graph.run_turn(text, Context(now=NOW), new_thread())
     assert [get_message_text(m) for m in added] == [prompts.MESSAGE_TOO_LONG]
+
+
+@pytest.mark.parametrize("text", ["   ", "\n"])
+def test_blank_messages_never_reach_the_model(monkeypatch, text):
+    def no_model(name):
+        raise AssertionError("the model must not be called")
+
+    monkeypatch.setattr(graph, "load_chat_model", no_model)
+    added = graph.run_turn(text, Context(now=NOW), new_thread())
+    assert [get_message_text(m) for m in added] == [prompts.EMPTY_MESSAGE]
