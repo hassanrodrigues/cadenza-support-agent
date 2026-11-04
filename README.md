@@ -49,7 +49,16 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 
 ### Other ways to run
 
-- **Without uv.** Linux/macOS: `python3 -m venv .venv && source .venv/bin/activate && pip install -e . pytest && cadenza`. Windows: `python -m venv .venv`, `.venv\Scripts\activate`, `pip install -e . pytest`, `cadenza`. Tests: `python -m pytest tests/unit_tests -q`. Only the editable install is supported, because the code finds `data/` from the repository root.
+- **Without uv.** Only the editable install (`-e`) is supported, because the code finds `data/` from the repository root.
+
+  ```
+  python3 -m venv .venv
+  source .venv/bin/activate        # Windows: .venv\Scripts\activate (and python instead of python3)
+  pip install -e . pytest
+  cadenza
+  python -m pytest tests/unit_tests -q
+  ```
+
 - **Tests only, no key.** `uv run pytest tests/unit_tests` (195 tests; the 3 for the web page are skipped without `--extra ui`) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
 - **In the browser.** `uv run --extra ui streamlit run src/cadenza/web.py` opens a basic chat page on the same agent, with the same key and `EMPORIO_NOW`.
 
