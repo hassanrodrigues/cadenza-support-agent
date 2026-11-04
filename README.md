@@ -28,9 +28,10 @@ Project layout follows the official LangGraph ReAct agent template ([langchain-a
 | `src/cadenza/prompts.py` | The system prompt and every fixed text the customer reads |
 | `src/cadenza/graph.py` | The ReAct graph, fallbacks and `run_turn` |
 | `src/cadenza/cli.py` | The `cadenza` command |
+| `src/cadenza/web.py` | Optional browser chat (Streamlit) on the same agent |
 | `evals/` | Cases, runner and the generated `results.md` |
 | `examples/` | Five conversations, as Markdown and as terminal SVG |
-| `docs/` | `decisions.md`, `data-issues.md`, the diagram |
+| `docs/` | `decisions.md`, `data-issues.md`, the diagram and the web screenshot |
 
 </details>
 
@@ -49,7 +50,8 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 ### Other ways to run
 
 - **Without uv.** Linux/macOS: `python3 -m venv .venv && source .venv/bin/activate && pip install -e . pytest && cadenza`. Windows: `python -m venv .venv`, `.venv\Scripts\activate`, `pip install -e . pytest`, `cadenza`. Tests: `python -m pytest tests/unit_tests -q`. Only the editable install is supported, because the code finds `data/` from the repository root.
-- **Tests only, no key.** `uv run pytest tests/unit_tests` (192 tests) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
+- **Tests only, no key.** `uv run pytest tests/unit_tests` (194 tests; the 2 for the web page are skipped without `--extra ui`) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
+- **In the browser.** `uv run --extra ui streamlit run src/cadenza/web.py` opens a basic chat page on the same agent, with the same key and `EMPORIO_NOW` ([screenshot](docs/web-ui.png)).
 - **Just read.** [`examples/`](examples/) and [`evals/results.md`](evals/results.md) show real runs.
 - **Re-run the eval or the examples.** `uv run python evals/run_evals.py` (about a minute, US$ 0.015) and `uv run python scripts/generate_examples.py` (under a cent). Prices: US$ 0.10 per million input tokens and US$ 0.50 per million output tokens for Claude Haiku 5.5 with prompts under 100k tokens ([Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing)); adaptive thinking is billed as output.
 - **Another provider.** Set `MODEL=provider/model` in `.env`, install the extra once (`uv sync --extra ollama`, for example) and set that provider's key. If the package is missing, the CLI tells you which extra to install.
@@ -75,13 +77,13 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 | **Synchronous graph** (the template is async) | With one `asyncio.run` per turn, the cached Anthropic HTTP client fails with "Event loop is closed" and retries silently, doubling calls, cost and latency | One conversation at a time per process; fine for a CLI |
 | Claude Haiku 5.5, provider chosen by `MODEL=provider/model` | The fastest current Claude, US$ 0.10/0.50 per million tokens, and 17/17 on my eval | Only Anthropic is tested |
 | Policies routed by 8 fixed topics, no embeddings | The manual has 10 sections and about 1,750 words. A topic map is deterministic and auditable, with no index and no second API key | A question outside the topics depends on the model picking the closest one |
-| **The LLM orchestrates, the code decides** | Promo price, PIX, installments, availability, order ownership and deadlines are computed in Python and come back formatted (`R$ 2.199,00`, `24/02/2026`), so the model copies instead of calculating | More tool code; 192 unit tests cover it |
+| **The LLM orchestrates, the code decides** | Promo price, PIX, installments, availability, order ownership and deadlines are computed in Python and come back formatted (`R$ 2.199,00`, `24/02/2026`), so the model copies instead of calculating | More tool code; 194 unit tests cover it |
 | **The session's `now` lives in the agent context and reaches tools through `ToolRuntime`** | The eval fixes a date per case without touching environment variables, and the system prompt stays identical across a session, which Haiku 5.5's thinking blocks need | A session keeps the time it started with |
 | **Fixed greeting in code** | In testing, the model skipped "I'm CaduAI" whenever the first message was a product question | The greeting can't adapt to the first message |
 | One English prompt in XML sections, zero-shot | Same prompt for every provider. Few-shot would come in only for a repeated eval failure, and none repeated | Prompt rules can be ignored, so the important ones are also enforced in code |
 | Repository in English, replies in Brazilian Portuguese | The process asked for English, which covers everything I deliver: code, docs, commits and the prompt. The store's customers and its manual are Brazilian, so the agent speaks their language; every fixed customer text sits in `prompts.py` | Readers who don't speak Portuguese rely on the English notes at the top of each example |
 | History in RAM (`MemorySaver`), one thread per session | A CLI conversation doesn't need to survive a restart | Lost on exit; `SqliteSaver` is a small swap |
-| CLI with `rich` | The brief says the focus is the agent working well | No web UI |
+| CLI with `rich`, plus an optional Streamlit page | The brief says the focus is the agent working well. The page reuses `run_turn`, so it adds no agent code | The page is a demo: one process, history in RAM, no login |
 
 The assistant introduces itself as **CaduAI**: "Cadu" is a common Brazilian nickname and a nod to the project name **Cadenza**, and the "AI" suffix discloses up front that customers are talking to a virtual assistant.
 
