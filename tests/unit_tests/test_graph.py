@@ -5,7 +5,7 @@ import pytest
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
-from cadenza import graph
+from cadenza import graph, prompts
 from cadenza.context import Context, parse_now
 from cadenza.utils import get_message_text
 
@@ -171,3 +171,13 @@ def test_tool_calls_and_token_usage_are_summarized_per_turn(script):
         'search_products(category="violões", max_price=1000)'
     ]
     assert graph.token_usage(added) == (250, 50)
+
+
+def test_long_messages_never_reach_the_model(monkeypatch):
+    def no_model(name):
+        raise AssertionError("the model must not be called")
+
+    monkeypatch.setattr(graph, "load_chat_model", no_model)
+    text = "x" * (graph.MAX_MESSAGE_CHARS + 1)
+    added = graph.run_turn(text, Context(now=NOW), new_thread())
+    assert [get_message_text(m) for m in added] == [prompts.MESSAGE_TOO_LONG]

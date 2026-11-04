@@ -100,12 +100,6 @@ def test_chat_greets_answers_and_says_goodbye(monkeypatch):
     assert [text for text, _ in sent] == ["Quanto custa o [Takamine]?"]
 
 
-def test_long_messages_are_refused_before_reaching_the_model(monkeypatch):
-    output, sent = run_chat(monkeypatch, ["x" * (cli.MAX_MESSAGE_CHARS + 1), "/sair"])
-    assert prompts.MESSAGE_TOO_LONG in output
-    assert sent == []
-
-
 def test_failed_model_call_is_reported_on_stderr(monkeypatch, capsys):
     output, _ = run_chat(monkeypatch, ["oi", "/sair"], reply=prompts.API_ERROR_REPLY)
     assert prompts.API_ERROR_REPLY in output

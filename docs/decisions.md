@@ -122,7 +122,7 @@ I did this review at the end of block 3. It asks two questions: does any rule li
 | Conflicting descriptions hidden | `store_data.has_description_conflict` | `test_description_conflicts_are_exactly_the_seven_known_products` |
 | Empty category says "no momento" | `catalog.EMPTY_CATEGORY_NOTICE` | `test_search_in_empty_category_says_not_right_now` |
 | Ticket protocol and response time | `support.open_support_ticket` | `test_ticket_is_saved_with_bounded_fields_and_returns_a_protocol` |
-| Message length | `cli.MAX_MESSAGE_CHARS` | `test_long_messages_are_refused_before_reaching_the_model` |
+| Message length | `graph.run_turn` | `test_long_messages_never_reach_the_model` |
 
 What the review found, and what I did about it:
 

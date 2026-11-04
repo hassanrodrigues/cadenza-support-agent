@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 
 # Each tool round costs two steps (model + tools), so this allows about five rounds per turn.
 MAX_GRAPH_STEPS = 12
+# Checked in run_turn, so no entry point (CLI, evals, a future webhook) can skip it.
+MAX_MESSAGE_CHARS = 2000
 
 
 def call_model(state: State, runtime: Runtime[Context]) -> dict[str, list[AIMessage]]:
@@ -72,6 +74,8 @@ def run_turn(
     text: str, context: Context, thread_id: str, max_steps: int = MAX_GRAPH_STEPS
 ) -> list[BaseMessage]:
     """Send one customer message and return the messages this turn added."""
+    if len(text) > MAX_MESSAGE_CHARS:
+        return [AIMessage(content=prompts.MESSAGE_TOO_LONG)]
     config: Any = {
         "configurable": {"thread_id": thread_id},
         "recursion_limit": max_steps,

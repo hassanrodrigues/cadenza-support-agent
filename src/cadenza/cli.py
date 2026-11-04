@@ -16,7 +16,6 @@ from cadenza.context import ROOT_DIR, RUNTIME_DIR, Context
 from cadenza.graph import run_turn
 from cadenza.utils import get_message_text, load_chat_model
 
-MAX_MESSAGE_CHARS = 2000
 CUSTOMER_PROMPT = f"[bold cyan]{prompts.CUSTOMER_LABEL}:[/] "
 EXIT_COMMANDS = {"/sair", "/exit", "/quit"}
 # For whoever runs the CLI: the customer only sees the fallback reply.
@@ -85,9 +84,6 @@ def chat(console: Console, context: Context) -> None:
                 context, thread_id = Context(), uuid.uuid4().hex
                 console.rule(prompts.NEW_CONVERSATION)
                 say(console, prompts.GREETING)
-                continue
-            if len(text) > MAX_MESSAGE_CHARS:
-                say(console, prompts.MESSAGE_TOO_LONG)
                 continue
             with console.status(prompts.TYPING):
                 added = run_turn(text, context, thread_id)
