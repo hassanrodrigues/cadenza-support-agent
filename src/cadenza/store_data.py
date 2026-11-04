@@ -20,15 +20,33 @@ INSTALLMENT_TIERS = ((3, Decimal("50")), (6, Decimal("80")), (12, Decimal("100")
 MAX_INSTALLMENTS = INSTALLMENT_TIERS[-1][0]
 
 # Normalized aliases customers use for each category_id. "sopro" covers both wind categories.
+# A trailing "s" is ignored when matching word by word, so most plurals need no entry.
 CATEGORY_ALIASES = {
     1: ("guitarra", "guitarras"),
     2: ("baixo", "baixos", "contrabaixo", "contrabaixos"),
     3: ("bateria", "baterias", "percussao"),
     4: ("teclado", "teclados", "piano", "pianos", "sintetizador"),
     5: ("violao", "violoes"),
-    6: ("sopro", "sopros", "madeiras", "flauta", "clarinete", "saxofone", "sax"),
-    7: ("sopro", "sopros", "metais", "trompete", "trombone"),
-    8: ("cordas orquestrais", "violino", "violinos", "violoncelo", "cello"),
+    6: (
+        "sopro",
+        "sopros",
+        "madeiras",
+        "flauta",
+        "clarinete",
+        "saxofone",
+        "sax",
+        "oboe",
+    ),
+    7: ("sopro", "sopros", "metais", "trompete", "trombone", "tuba", "trompa"),
+    8: (
+        "cordas orquestrais",
+        "violino",
+        "violinos",
+        "viola",
+        "violoncelo",
+        "cello",
+        "contrabaixo acustico",
+    ),
     9: ("ukulele", "ukuleles"),
 }
 
@@ -44,6 +62,7 @@ class Store:
     """All store tables, already normalized."""
 
     products: pd.DataFrame
+    categories: pd.DataFrame
     customers: pd.DataFrame
     orders: pd.DataFrame
     order_items: pd.DataFrame
@@ -98,10 +117,22 @@ def max_installments(price: Decimal) -> tuple[int, Decimal]:
 
 
 def resolve_category(text: str) -> list[int] | None:
-    """Category ids matching a customer term, or None if the term is unknown."""
-    term = normalize_text(text).strip()
+    """Category ids matching a customer term, or None if the term is unknown.
+
+    The whole term is tried first ("contrabaixo acustico"), then word by word, keeping the
+    categories that match the most words, so "Instrumentos de Sopro (Madeiras)" gives 6.
+    """
+    term = search_key(text).strip()
     ids = [cid for cid, aliases in CATEGORY_ALIASES.items() if term in aliases]
-    return ids or None
+    if ids:
+        return ids
+    words = term.split()
+    scores = {
+        cid: sum(w in aliases or w.removesuffix("s") in aliases for w in words)
+        for cid, aliases in CATEGORY_ALIASES.items()
+    }
+    best = max(scores.values())
+    return [cid for cid, score in scores.items() if score == best] if best else None
 
 
 def extract_brand(name: str) -> str:
@@ -199,9 +230,10 @@ def load_store(data_dir: Path) -> Store:
     orders = read("orders")
     for column in ("order_date", "estimated_delivery"):
         orders[column] = orders[column].map(_parse_date)
-    promotions = read("promotions")
+    promotions, categories = read("promotions"), read("categories")
     return Store(
-        products=_prepare_products(read("products"), read("categories"), promotions),
+        products=_prepare_products(read("products"), categories, promotions),
+        categories=categories,
         customers=customers,
         orders=orders,
         order_items=read("order_items"),

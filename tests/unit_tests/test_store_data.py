@@ -64,6 +64,24 @@ def test_search_text_includes_category_aliases(store):
         ("sopro", [6, 7]),
         ("violino", [8]),
         ("pandeiro azul", None),
+        # Names from categories.csv, which the search tool suggests on an unknown category.
+        ("Teclados e Pianos", [4]),
+        ("Baterias e Percussão", [3]),
+        ("Instrumentos de Sopro (Madeiras)", [6]),
+        ("Instrumentos de Sopro (Metais)", [7]),
+        ("Cordas Orquestrais", [8]),
+        # Natural phrasing and plurals.
+        ("piano digital", [4]),
+        ("guitarra elétrica", [1]),
+        ("violão de aço", [5]),
+        ("flautas", [6]),
+        ("saxofone", [6]),
+        ("oboé", [6]),
+        ("trompete", [7]),
+        ("tubas", [7]),
+        ("trompa", [7]),
+        ("viola", [8]),
+        ("contrabaixo acústico", [8]),
     ],
 )
 def test_resolve_category_maps_customer_terms(term, expected):

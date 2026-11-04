@@ -34,9 +34,8 @@ dev = ["pytest>=9.0", "ruff>=0.16"]
 requires = ["setuptools>=80"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools]
-packages = ["cadenza"]
-package-dir = { "" = "src" }
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
@@ -44,3 +43,5 @@ ignore = ["E501"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
+# Plain `pytest` never makes paid calls; run tests/integration_tests explicitly.
+testpaths = ["tests/unit_tests"]

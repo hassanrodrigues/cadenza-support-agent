@@ -58,13 +58,24 @@ def test_missing_key_exits_with_one_clear_line(monkeypatch, capsys):
     )
 
 
-def run_chat(monkeypatch, lines):
+def test_invalid_reference_time_exits_with_one_clear_line(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "load_dotenv", lambda path: None)
+    monkeypatch.setenv("EMPORIO_NOW", "amanha")
+    with pytest.raises(SystemExit) as exit_info:
+        cli.main()
+    assert exit_info.value.code == 1
+    assert capsys.readouterr().err.strip() == (
+        "EMPORIO_NOW must look like 2026-02-20T10:00, got 'amanha'."
+    )
+
+
+def run_chat(monkeypatch, lines, reply=None):
     """Drive the chat loop with scripted input; return the output and the turns sent."""
     sent = []
 
     def fake_turn(text, context, thread_id):
         sent.append((text, thread_id))
-        return [AIMessage(f"resposta para {text}")]
+        return [AIMessage(reply or f"resposta para {text}")]
 
     feed = iter(lines)
 
@@ -89,10 +100,15 @@ def test_chat_greets_answers_and_says_goodbye(monkeypatch):
     assert [text for text, _ in sent] == ["Quanto custa o [Takamine]?"]
 
 
-def test_long_messages_are_refused_before_reaching_the_model(monkeypatch):
-    output, sent = run_chat(monkeypatch, ["x" * (cli.MAX_MESSAGE_CHARS + 1), "/sair"])
-    assert prompts.MESSAGE_TOO_LONG in output
-    assert sent == []
+def test_failed_model_call_is_reported_on_stderr(monkeypatch, capsys):
+    output, _ = run_chat(monkeypatch, ["oi", "/sair"], reply=prompts.API_ERROR_REPLY)
+    assert prompts.API_ERROR_REPLY in output
+    assert capsys.readouterr().err.strip() == cli.MODEL_FAILED
+
+
+def test_normal_reply_writes_nothing_on_stderr(monkeypatch, capsys):
+    run_chat(monkeypatch, ["oi", "/sair"])
+    assert capsys.readouterr().err == ""
 
 
 def test_new_command_starts_a_separate_conversation(monkeypatch):
@@ -116,3 +132,9 @@ def test_only_the_label_of_a_reply_is_styled(monkeypatch):
     assert text.plain == "CaduAI: Olá [cliente]"
     assert not text.style
     assert [(span.start, span.end) for span in text.spans] == [(0, len("CaduAI: "))]
+
+
+def test_control_characters_from_the_model_are_removed():
+    console = Console(file=io.StringIO(), width=200)
+    cli.say(console, "Olá\x1b]0;hacked\x07 cliente\x1b[2J\nTchau")
+    assert console.file.getvalue() == "CaduAI: Olá]0;hacked cliente[2J\nTchau\n\n"

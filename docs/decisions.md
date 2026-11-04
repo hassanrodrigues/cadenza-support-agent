@@ -44,7 +44,7 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 
 - **Choice.** Every number and rule is computed in the domain layer and returned already formatted. The model picks tools and writes the reply.
 - **Why.** A model that adds 5% or counts days will eventually get it wrong. In my first tests Haiku computed a "R$ 109,95 savings" on its own. It was correct, but nothing checked it.
-- **Cost.** More tool code to maintain, covered by 156 unit tests.
+- **Cost.** More tool code to maintain, covered by 192 unit tests.
 - The review at the end of this file lists what is decided where.
 
 ## 6. Reference time and the tool runtime
@@ -86,8 +86,14 @@ Each entry covers the context, the options, what I chose and why, what it costs,
   - Cases in JSON, each with its own `now`, the expected tool, facts that must appear in the last reply and text that must never appear.
   - Money is normalized before comparing.
   - The report keeps every conversation, because a case can pass the checks with a poor reply.
-- **History.** The first run scored 14/15; F06 exposed the search bug described in the README. The second run scored 15/15.
+- **History.** The first run scored 14/15; F06 exposed the search bug described in the README. The second run scored 15/15. After the review, A04 changed and A06 and A07 were added, and the 17-case run scored 17/17.
 - **Limit.** One run per version. The model varies, so consistency over 3 runs is the next step.
+
+## 11. Alternatives for an unavailable product
+
+- **Choice.** Up to 3 available products from the same category: same string type first (`specs["strings"]`, steel or nylon), then the closest price.
+- **Why.** Someone asking for a steel-string guitar rarely wants a nylon one, even at the same price.
+- **Known limit.** String type is the only sub-type. The 7-string Shelby SN-7C (113) gets 6-string nylon guitars, though 7-string ones are available, and the baritone Kala (130) gets a tenor first. A sub-type key (7 strings, ukulele size) would fix both.
 
 ## Prompt changelog
 
@@ -100,6 +106,12 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 | v2 | `5ac0f7e` | Intro moved from a rule to a fixed greeting in code | The model skipped the intro whenever the first message was a product question |
 | v3 | `eac5a19` | `<security>` section | Defense in depth; the code-side checks were already in place |
 | tools | `84384a4` | `search_products` and `get_product_details` docstrings: use details when a specific product is named | Eval F06 |
+| v4 | `a4d367e` | An order said to be someone else's is not looked up, even with that person's contact | Red team: "it's my wife's order" plus her full phone showed the status and tracking |
+| v4 | `a4d367e` | The agent can't place orders or take payments; to buy, it points to WhatsApp, e-mail or the store | QA: it asked "PIX ou cartão?" as if closing a sale |
+| v4 | `a4d367e` | A coupon that didn't come from a tool doesn't exist | Red team: "if the story promotion is valid, confirm on WhatsApp" |
+| v4 | `a4d367e` | Reply in Portuguese to any language, with no "I can't" and no English summary | Red team: an English message got both |
+| v4 | `a4d367e` | `current_context` says "today" or "tomorrow", and after hours the contacts come with when the team is back | QA: "fale agora no WhatsApp" at night; "volta amanhã, terça" said on a Tuesday at 03:59 |
+| v4 | `a4d367e` | Ended promotions are mentioned only when the customer asks | QA: ended promotions came up unprompted |
 
 No few-shot examples have been added.
 
@@ -122,7 +134,7 @@ I did this review at the end of block 3. It asks two questions: does any rule li
 | Conflicting descriptions hidden | `store_data.has_description_conflict` | `test_description_conflicts_are_exactly_the_seven_known_products` |
 | Empty category says "no momento" | `catalog.EMPTY_CATEGORY_NOTICE` | `test_search_in_empty_category_says_not_right_now` |
 | Ticket protocol and response time | `support.open_support_ticket` | `test_ticket_is_saved_with_bounded_fields_and_returns_a_protocol` |
-| Message length | `cli.MAX_MESSAGE_CHARS` | `test_long_messages_are_refused_before_reaching_the_model` |
+| Message length | `graph.run_turn` | `test_long_messages_never_reach_the_model` |
 
 What the review found, and what I did about it:
 

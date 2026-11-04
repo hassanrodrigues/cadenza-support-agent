@@ -26,6 +26,14 @@ def test_unknown_contact_and_someone_elses_order_get_the_same_answer(at):
     assert unknown == not_theirs == {"error": support.ORDER_NOT_FOUND}
 
 
+def test_contact_without_orders_and_an_order_number_gets_the_same_answer(at):
+    # Customer 43 has no orders; an empty frame used to crash the order_id filter.
+    result = support.lookup_orders(
+        "(67) 99456-3456", order_id=10, runtime=at("2026-03-25T10:00")
+    )
+    assert result == {"error": support.ORDER_NOT_FOUND}
+
+
 def test_shared_email_asks_for_more_unless_order_number_is_given(at):
     now = at("2026-03-25T10:00")
     assert (

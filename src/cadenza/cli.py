@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+import re
 import sys
 import uuid
 
@@ -16,9 +17,12 @@ from cadenza.context import ROOT_DIR, RUNTIME_DIR, Context
 from cadenza.graph import run_turn
 from cadenza.utils import get_message_text, load_chat_model
 
-MAX_MESSAGE_CHARS = 2000
 CUSTOMER_PROMPT = f"[bold cyan]{prompts.CUSTOMER_LABEL}:[/] "
 EXIT_COMMANDS = {"/sair", "/exit", "/quit"}
+# Control characters (ESC included) could move the cursor or change the terminal; keep \t and \n.
+CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b-\x1f\x7f-\x9f]")
+# For whoever runs the CLI: the customer only sees the fallback reply.
+MODEL_FAILED = "Model call failed; see runtime/cadenza.log"
 # Keys we can check before the first call; Ollama and Bedrock authenticate differently.
 PROVIDER_KEYS = {
     "anthropic": "ANTHROPIC_API_KEY",
@@ -61,6 +65,7 @@ def say(console: Console, text: str) -> None:
     """Print one CaduAI message."""
     # assemble() styles only the label, and plain text keeps the model's brackets from being
     # read as rich markup.
+    text = CONTROL_CHARS.sub("", text)
     console.print(
         Text.assemble((f"{prompts.ASSISTANT_LABEL}: ", "bold magenta"), text),
         end="\n\n",
@@ -84,12 +89,12 @@ def chat(console: Console, context: Context) -> None:
                 console.rule(prompts.NEW_CONVERSATION)
                 say(console, prompts.GREETING)
                 continue
-            if len(text) > MAX_MESSAGE_CHARS:
-                say(console, prompts.MESSAGE_TOO_LONG)
-                continue
             with console.status(prompts.TYPING):
                 added = run_turn(text, context, thread_id)
-            say(console, get_message_text(added[-1]))
+            reply = get_message_text(added[-1])
+            say(console, reply)
+            if reply == prompts.API_ERROR_REPLY:
+                print(MODEL_FAILED, file=sys.stderr)
         except (EOFError, KeyboardInterrupt):
             console.print()
             break
@@ -99,7 +104,13 @@ def chat(console: Console, context: Context) -> None:
 def main() -> None:
     """Entry point of the `cadenza` command."""
     load_dotenv(ROOT_DIR / ".env")
-    context = Context()
+    try:
+        context = Context()
+    except ValueError:
+        value = os.environ.get("EMPORIO_NOW")
+        error = f"EMPORIO_NOW must look like 2026-02-20T10:00, got {value!r}."
+        print(error, file=sys.stderr)
+        raise SystemExit(1) from None
     error = config_error(context.model)
     if error:
         print(error, file=sys.stderr)
@@ -108,6 +119,7 @@ def main() -> None:
     # Logs go to a file so the customer never sees a stack trace; no personal data is logged.
     logging.basicConfig(
         filename=RUNTIME_DIR / "cadenza.log",
+        encoding="utf-8",
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )

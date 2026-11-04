@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 
 # Each tool round costs two steps (model + tools), so this allows about five rounds per turn.
 MAX_GRAPH_STEPS = 12
+# Checked in run_turn, so no entry point (CLI, evals, a future webhook) can skip it.
+MAX_MESSAGE_CHARS = 2000
 
 
 def call_model(state: State, runtime: Runtime[Context]) -> dict[str, list[AIMessage]]:
@@ -34,9 +36,8 @@ def call_model(state: State, runtime: Runtime[Context]) -> dict[str, list[AIMess
             AIMessage,
             model.invoke([{"role": "system", "content": system}, *state["messages"]]),
         )
-    except (
-        Exception
-    ):  # each provider SDK raises its own errors; the client already retried
+    # Each provider SDK raises its own errors, and the client has already retried.
+    except Exception:
         logger.exception("Model call failed")
         return {"messages": [AIMessage(content=prompts.API_ERROR_REPLY)]}
     if state.get("is_last_step") and response.tool_calls:
@@ -64,7 +65,7 @@ builder.add_node("tools", ToolNode(TOOLS, handle_tool_errors=True))
 builder.add_edge("__start__", "call_model")
 builder.add_conditional_edges("call_model", route_model_output)
 builder.add_edge("tools", "call_model")
-# ponytail: history lives in RAM per thread_id; swap in SqliteSaver to keep it across runs.
+# Known limit: history lives in RAM per thread_id; SqliteSaver would keep it across runs.
 graph = builder.compile(checkpointer=MemorySaver(), name="Cadenza")
 
 
@@ -72,6 +73,8 @@ def run_turn(
     text: str, context: Context, thread_id: str, max_steps: int = MAX_GRAPH_STEPS
 ) -> list[BaseMessage]:
     """Send one customer message and return the messages this turn added."""
+    if len(text) > MAX_MESSAGE_CHARS:
+        return [AIMessage(content=prompts.MESSAGE_TOO_LONG)]
     config: Any = {
         "configurable": {"thread_id": thread_id},
         "recursion_limit": max_steps,
