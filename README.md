@@ -12,7 +12,7 @@ Sample conversations, generated from real runs: [catalog and address](examples/0
 
 ![Architecture diagram](docs/architecture.png)
 
-A customer message enters the CLI, which keeps one LangGraph thread per session in memory. The `call_model` node sends the system prompt, the history and six tool schemas to Claude Haiku 5.5. If the model asks for a tool, `ToolNode` runs it and the loop returns to the model; otherwise the reply goes to the customer. The tools stay thin and call a plain-Python domain layer (`store_data.py`, `order_rules.py`, `policies.py`) that loads the CSVs and the PDF once and decides every number and rule.
+A customer message enters the CLI (or the optional web page), which keeps one LangGraph thread per session in memory. The `call_model` node sends the system prompt, the history and six tool schemas to Claude Haiku 5.5. If the model asks for a tool, `ToolNode` runs it and the loop returns to the model; otherwise the reply goes to the customer. The tools stay thin and call a plain-Python domain layer (`store_data.py`, `order_rules.py`, `policies.py`) that loads the CSVs and the PDF once and decides every number and rule.
 
 Project layout follows the official LangGraph ReAct agent template ([langchain-ai/react-agent](https://github.com/langchain-ai/react-agent), MIT), extended with a domain layer for the store data and policies. From the template I kept the `call_model` + `ToolNode` loop, the `is_last_step` step limit and the `provider/model` split in `load_chat_model`; the rest is written for this store.
 
@@ -59,7 +59,7 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
   python -m pytest tests/unit_tests -q
   ```
 
-- **Tests only, no key.** `uv run pytest tests/unit_tests` (197 tests; the 5 for the web page are skipped without `--extra ui`) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
+- **Tests only, no key.** `uv run pytest tests/unit_tests` (192 tests; `uv sync --extra ui` adds the 5 for the web page, 197 in total) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
 - **In the browser.** `uv run --extra ui streamlit run src/cadenza/web.py` opens a chat page on the same agent and key. The sidebar sets the store clock (20/02/2026 10:00 unless `EMPORIO_NOW` is set, so order deadlines fall inside the dataset) and shows whether the store is open; each reply lists the tools it called and its tokens.
 
   <img src="docs/web-ui.png" alt="The optional web page: the store clock and status in the sidebar, a promotion question answered with the original price and the discount, and the tool it called" width="720">
@@ -115,7 +115,7 @@ The full table, with the evidence and the code or test for each issue, is in [`d
 
 ## Evaluation
 
-[`evals/cases.json`](evals/cases.json) has 10 functional cases (catalog, address, price, promotions, stock, an empty category, hours, order status, return window) and 7 adversarial ones (injection, false authority, prompt extraction, another customer's data, PIX on top of a promotion, an order said to be someone else's, an English message). Each case fixes its own date, names the tool it expects, lists facts that must be in the last reply, and lists text that must never appear. Money is normalized, so "R$2199", "R$ 2.199,00" and "2199 reais" match.
+[`evals/cases.json`](evals/cases.json) has 10 functional cases (catalog, address, price, promotions, stock, an empty category, hours, order status, return window) and 7 adversarial ones (injection, false authority, prompt extraction, another customer's data, PIX on top of a promotion, an order said to be someone else's, an English message). Each case fixes its own date, names the tool it expects (functional cases), lists facts that must be in the last reply, and lists text that must never appear. Money is normalized, so "R$2199", "R$ 2.199,00" and "2199 reais" match.
 
 - **First run: 14/15.** F06 asked for the out-of-stock Giannini GF-3D. The model searched with the default "available only" filter, the product vanished, and the agent said it wasn't in the catalog. That was a code bug, not a prompt problem: `search_products` now returns matching items that aren't for sale, with their status ([commit](https://github.com/hassanrodrigues/cadenza-support-agent/commit/84384a4)).
 - **Second run: 15/15.** About 103k input and 5k output tokens, US$ 0.013, with a median of 3.4 s per case.
