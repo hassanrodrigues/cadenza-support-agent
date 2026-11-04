@@ -119,6 +119,7 @@ def main() -> None:
     # Logs go to a file so the customer never sees a stack trace; no personal data is logged.
     logging.basicConfig(
         filename=RUNTIME_DIR / "cadenza.log",
+        encoding="utf-8",
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
