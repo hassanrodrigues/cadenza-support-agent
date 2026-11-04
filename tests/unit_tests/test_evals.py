@@ -47,11 +47,11 @@ def test_check_reports_missing_tool_missing_fact_and_forbidden_text():
     ]
 
 
-def test_case_file_has_ten_functional_and_five_adversarial_cases():
+def test_case_file_has_ten_functional_and_seven_adversarial_cases():
     cases = json.loads((ROOT_DIR / "evals" / "cases.json").read_text(encoding="utf-8"))
     suites = [c["suite"] for c in cases]
     assert suites.count("functional") == 10
-    assert suites.count("adversarial") == 5
+    assert suites.count("adversarial") == 7
     assert len({c["id"] for c in cases}) == len(cases)
     assert all(c["turns"] and c["now"] for c in cases)
 
