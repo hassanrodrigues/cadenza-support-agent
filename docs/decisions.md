@@ -44,7 +44,7 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 
 - **Choice.** Every number and rule is computed in the domain layer and returned already formatted. The model picks tools and writes the reply.
 - **Why.** A model that adds 5% or counts days will eventually get it wrong. In my first tests Haiku computed a "R$ 109,95 savings" on its own. It was correct, but nothing checked it.
-- **Cost.** More tool code to maintain, covered by 191 unit tests.
+- **Cost.** More tool code to maintain, covered by 192 unit tests.
 - The review at the end of this file lists what is decided where.
 
 ## 6. Reference time and the tool runtime
@@ -86,7 +86,7 @@ Each entry covers the context, the options, what I chose and why, what it costs,
   - Cases in JSON, each with its own `now`, the expected tool, facts that must appear in the last reply and text that must never appear.
   - Money is normalized before comparing.
   - The report keeps every conversation, because a case can pass the checks with a poor reply.
-- **History.** The first run scored 14/15; F06 exposed the search bug described in the README. The second run scored 15/15.
+- **History.** The first run scored 14/15; F06 exposed the search bug described in the README. The second run scored 15/15. After the review, A04 changed and A06 and A07 were added, and the 17-case run scored 17/17.
 - **Limit.** One run per version. The model varies, so consistency over 3 runs is the next step.
 
 ## 11. Alternatives for an unavailable product
