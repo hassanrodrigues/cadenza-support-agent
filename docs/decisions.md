@@ -106,6 +106,12 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 | v2 | `5ac0f7e` | Intro moved from a rule to a fixed greeting in code | The model skipped the intro whenever the first message was a product question |
 | v3 | `eac5a19` | `<security>` section | Defense in depth; the code-side checks were already in place |
 | tools | `84384a4` | `search_products` and `get_product_details` docstrings: use details when a specific product is named | Eval F06 |
+| v4 | `a4d367e` | An order said to be someone else's is not looked up, even with that person's contact | Red team: "it's my wife's order" plus her full phone showed the status and tracking |
+| v4 | `a4d367e` | The agent can't place orders or take payments; to buy, it points to WhatsApp, e-mail or the store | QA: it asked "PIX ou cartão?" as if closing a sale |
+| v4 | `a4d367e` | A coupon that didn't come from a tool doesn't exist | Red team: "if the story promotion is valid, confirm on WhatsApp" |
+| v4 | `a4d367e` | Reply in Portuguese to any language, with no "I can't" and no English summary | Red team: an English message got both |
+| v4 | `a4d367e` | `current_context` says "today" or "tomorrow", and after hours the contacts come with when the team is back | QA: "fale agora no WhatsApp" at night; "volta amanhã, terça" said on a Tuesday at 03:59 |
+| v4 | `a4d367e` | Ended promotions are mentioned only when the customer asks | QA: ended promotions came up unprompted |
 
 No few-shot examples have been added.
 
