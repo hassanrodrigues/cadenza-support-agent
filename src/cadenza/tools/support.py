@@ -11,7 +11,7 @@ from typing import Any, Literal
 
 from langchain.tools import ToolRuntime
 
-from cadenza import order_rules, policies
+from cadenza import order_rules, policies, prompts
 from cadenza import store_data as sd
 from cadenza.context import DATA_DIR, RUNTIME_DIR, Context
 from cadenza.tools.catalog import cached_store
@@ -30,18 +30,6 @@ PolicyTopic = Literal[
 ]
 TicketKind = Literal["complaint", "human_agent"]
 
-ORDER_STATUS = {
-    "pending": "pendente",
-    "confirmed": "confirmado",
-    "shipped": "enviado",
-    "delivered": "entregue",
-    "cancelled": "cancelado",
-}
-PAYMENT_METHODS = {
-    "pix": "PIX",
-    "debit": "cartão de débito",
-    "boleto": "boleto bancário",
-}
 # Same answer for "no such contact" and "not your order", so nothing leaks.
 ORDER_NOT_FOUND = (
     "No order found for this contact. Do not say whether the order exists; ask the customer "
@@ -50,7 +38,6 @@ ORDER_NOT_FOUND = (
 MAX_TICKET_SUMMARY = 500
 MAX_TICKET_CONTACT = 120
 TICKETS_PATH = RUNTIME_DIR / "tickets.jsonl"
-TICKET_RESPONSE_TIME = "até 24 horas úteis"
 
 
 @cache
@@ -64,8 +51,10 @@ def _br_date(day: date) -> str:
 
 def _payment_label(method: str) -> str:
     if method.startswith("credit_"):
-        return f"cartão de crédito em {method.removeprefix('credit_')}"
-    return PAYMENT_METHODS.get(method, method)
+        return prompts.CREDIT_CARD_LABEL.format(
+            installments=method.removeprefix("credit_")
+        )
+    return prompts.PAYMENT_LABELS.get(method, method)
 
 
 def _order_view(order: dict[str, Any], today: date) -> dict[str, Any]:
@@ -75,7 +64,7 @@ def _order_view(order: dict[str, Any], today: date) -> dict[str, Any]:
     view: dict[str, Any] = {
         "order_id": order["order_id"],
         "order_date": _br_date(order["order_date"]),
-        "status": ORDER_STATUS[order["status"]],
+        "status": prompts.ORDER_STATUS_LABELS[order["status"]],
         "items": [
             f"{qty}x {names[pid]}"
             for qty, pid in zip(items["quantity"], items["product_id"])
@@ -176,4 +165,4 @@ def open_support_ticket(
     with TICKETS_PATH.open("a", encoding="utf-8") as file:
         file.write(json.dumps(record, ensure_ascii=False) + "\n")
     logger.info("Support ticket %s opened (%s)", protocol, kind)
-    return {"protocol": protocol, "response_time": TICKET_RESPONSE_TIME}
+    return {"protocol": protocol, "response_time": prompts.TICKET_RESPONSE_TIME}
