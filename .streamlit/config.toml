@@ -1,0 +1,12 @@
+# Theme for the optional web page (src/cadenza/web.py); Streamlit reads it from the repo root.
+[theme]
+primaryColor = "#A0522D"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F7F1EA"
+textColor = "#2B2118"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
