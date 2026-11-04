@@ -58,6 +58,17 @@ def test_missing_key_exits_with_one_clear_line(monkeypatch, capsys):
     )
 
 
+def test_invalid_reference_time_exits_with_one_clear_line(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "load_dotenv", lambda path: None)
+    monkeypatch.setenv("EMPORIO_NOW", "amanha")
+    with pytest.raises(SystemExit) as exit_info:
+        cli.main()
+    assert exit_info.value.code == 1
+    assert capsys.readouterr().err.strip() == (
+        "EMPORIO_NOW must look like 2026-02-20T10:00, got 'amanha'."
+    )
+
+
 def run_chat(monkeypatch, lines, reply=None):
     """Drive the chat loop with scripted input; return the output and the turns sent."""
     sent = []

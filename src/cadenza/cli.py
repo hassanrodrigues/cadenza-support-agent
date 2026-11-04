@@ -104,7 +104,13 @@ def chat(console: Console, context: Context) -> None:
 def main() -> None:
     """Entry point of the `cadenza` command."""
     load_dotenv(ROOT_DIR / ".env")
-    context = Context()
+    try:
+        context = Context()
+    except ValueError:
+        value = os.environ.get("EMPORIO_NOW")
+        error = f"EMPORIO_NOW must look like 2026-02-20T10:00, got {value!r}."
+        print(error, file=sys.stderr)
+        raise SystemExit(1) from None
     error = config_error(context.model)
     if error:
         print(error, file=sys.stderr)
