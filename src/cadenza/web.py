@@ -5,22 +5,43 @@ Usage: uv run --extra ui streamlit run src/cadenza/web.py   (needs the provider 
 
 from __future__ import annotations
 
+import os
 import uuid
+from datetime import datetime, timedelta
 
 import streamlit as st
 from dotenv import load_dotenv
 
 from cadenza import graph, prompts
 from cadenza.cli import config_error
-from cadenza.context import ROOT_DIR, Context
+from cadenza.context import ROOT_DIR, STORE_TZ, Context, parse_now
+from cadenza.policies import next_opening
 from cadenza.utils import get_message_text
 
 AVATARS = {"assistant": "🎸", "user": "🙂"}
+# Without EMPORIO_NOW the page starts inside the dataset (Oct 2025 to Mar 2026), so order
+# deadlines look as a customer would have seen them.
+DEMO_NOW = "2026-02-20T10:00"
 
 
-def show(role: str, text: str) -> None:
+def show(role: str, text: str, details: tuple | None = None) -> None:
+    message = st.chat_message(role, avatar=AVATARS[role])
     # Escape "$" so "R$ 10 ... R$ 20" is not rendered as a LaTeX formula.
-    st.chat_message(role, avatar=AVATARS[role]).markdown(text.replace("$", r"\$"))
+    message.markdown(text.replace("$", r"\$"))
+    if details:
+        calls, (tokens_in, tokens_out) = details
+        with message.expander("Tools called"):
+            st.code("\n".join(calls) or "none", language=None)
+            st.caption(
+                f"Tokens: {tokens_in:,} in, {tokens_out:,} out (output includes thinking)"
+            )
+
+
+def start(context: Context) -> None:
+    """New conversation: fresh thread and history, with this context's fixed `now`."""
+    st.session_state.context = context
+    st.session_state.thread_id = uuid.uuid4().hex
+    st.session_state.history = [("assistant", prompts.GREETING, None)]
 
 
 load_dotenv(ROOT_DIR / ".env")
@@ -37,20 +58,35 @@ if "thread_id" not in st.session_state:
     if error := config_error(context.model):
         st.error(error)
         st.stop()
-    st.session_state.context = context
-    st.session_state.thread_id = uuid.uuid4().hex
-    st.session_state.history = [("assistant", prompts.GREETING)]
+    now = context.now if os.environ.get("EMPORIO_NOW") else parse_now(DEMO_NOW)
+    start(Context(model=context.model, now=now.replace(second=0, microsecond=0)))
 
+context = st.session_state.context
 with st.sidebar:
     st.subheader("Empório da Música")
-    st.caption(f"Model: {st.session_state.context.model}")
-    st.caption(f"Store clock: {st.session_state.context.now:%d/%m/%Y %H:%M}")
+    st.caption(f"Model: {context.model}")
+    day = st.date_input("Store date", context.now.date(), format="DD/MM/YYYY")
+    hour = st.time_input(
+        "Store time",
+        context.now.time().replace(tzinfo=None),
+        step=timedelta(minutes=30),
+    )
+    picked = datetime.combine(day, hour, tzinfo=STORE_TZ)
+    if picked != context.now:
+        # `now` is fixed per conversation, so a new time starts a new one.
+        start(Context(model=context.model, now=picked))
+        st.rerun()
+    opening = next_opening(context.now)
+    if opening == context.now:
+        st.success("Store open now")
+    else:
+        st.info(f"Store closed; the team is back {opening:%a %d/%m at %H:%M}")
     if st.button(prompts.NEW_CONVERSATION, width="stretch"):
-        st.session_state.clear()
+        start(context)
         st.rerun()
 
-for role, text in st.session_state.history:
-    show(role, text)
+for role, text, details in st.session_state.history:
+    show(role, text, details)
 
 text = st.chat_input(prompts.WEB_INPUT_PLACEHOLDER)
 if len(st.session_state.history) == 1:
@@ -65,10 +101,8 @@ if len(st.session_state.history) == 1:
 if text:
     show("user", text)
     with st.spinner(prompts.TYPING):
-        added = graph.run_turn(
-            text, st.session_state.context, st.session_state.thread_id
-        )
+        added = graph.run_turn(text, context, st.session_state.thread_id)
+    details = (graph.tool_calls(added), graph.token_usage(added))
     reply = get_message_text(added[-1])
-    show("assistant", reply)
-    st.session_state.history += [("user", text), ("assistant", reply)]
+    st.session_state.history += [("user", text, None), ("assistant", reply, details)]
     st.rerun()
