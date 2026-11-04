@@ -26,6 +26,8 @@ groq = ["langchain-groq"]
 openrouter = ["langchain-openrouter"]
 aws = ["langchain-aws"]
 ollama = ["langchain-ollama"]
+# Optional browser chat: uv run --extra ui streamlit run src/cadenza/web.py
+ui = ["streamlit"]
 
 [dependency-groups]
 dev = ["pytest>=9.0", "ruff>=0.16"]

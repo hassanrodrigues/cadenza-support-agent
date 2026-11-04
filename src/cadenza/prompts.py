@@ -126,6 +126,7 @@ CASH_ONLY_LABEL = "somente à vista"
 TICKET_RESPONSE_TIME = "até 24 horas úteis"
 CLI_HELP = "Digite /new para começar uma nova conversa ou /sair para encerrar."
 NEW_CONVERSATION = "Nova conversa"
+WEB_INPUT_PLACEHOLDER = "Digite sua mensagem"
 GOODBYE = "Até mais! Quando precisar, é só chamar."
 MESSAGE_TOO_LONG = "Sua mensagem ficou bem longa. Pode resumir em até 2.000 caracteres?"
 
