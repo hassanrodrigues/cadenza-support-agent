@@ -89,6 +89,12 @@ Each entry covers the context, the options, what I chose and why, what it costs,
 - **History.** The first run scored 14/15; F06 exposed the search bug described in the README. The second run scored 15/15.
 - **Limit.** One run per version. The model varies, so consistency over 3 runs is the next step.
 
+## 11. Alternatives for an unavailable product
+
+- **Choice.** Up to 3 available products from the same category: same string type first (`specs["strings"]`, steel or nylon), then the closest price.
+- **Why.** Someone asking for a steel-string guitar rarely wants a nylon one, even at the same price.
+- **Known limit.** String type is the only sub-type. The 7-string Shelby SN-7C (113) gets 6-string nylon guitars, though 7-string ones are available, and the baritone Kala (130) gets a tenor first. A sub-type key (7 strings, ukulele size) would fix both.
+
 ## Prompt changelog
 
 | Version | Commit | Change | Why |

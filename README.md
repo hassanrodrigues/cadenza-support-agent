@@ -48,7 +48,7 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 
 ### Other ways to run
 
-- **Without uv.** Linux/macOS: `python3 -m venv .venv && source .venv/bin/activate && pip install -e . && cadenza`. Windows: `python -m venv .venv`, `.venv\Scripts\activate`, `pip install -e .`, `cadenza`.
+- **Without uv.** Linux/macOS: `python3 -m venv .venv && source .venv/bin/activate && pip install -e . pytest && cadenza`. Windows: `python -m venv .venv`, `.venv\Scripts\activate`, `pip install -e . pytest`, `cadenza`. Tests: `python -m pytest tests/unit_tests -q`. Only the editable install is supported, because the code finds `data/` from the repository root.
 - **Tests only, no key.** `uv run pytest tests/unit_tests` (156 tests) and `uv run ruff check .`. With a key, `uv run pytest tests/integration_tests` makes 3 real calls.
 - **Just read.** [`examples/`](examples/) and [`evals/results.md`](evals/results.md) show real runs.
 - **Re-run the eval or the examples.** `uv run python evals/run_evals.py` (about a minute, US$ 0.013) and `uv run python scripts/generate_examples.py` (under a cent). Prices: US$ 0.10 per million input tokens and US$ 0.50 per million output tokens for Claude Haiku 5.5 with prompts under 100k tokens ([Anthropic pricing](https://platform.claude.com/docs/en/about-claude/pricing)); adaptive thinking is billed as output.
@@ -60,6 +60,11 @@ Write in Portuguese; `/new` starts a new conversation and `/sair` exits. Without
 | Ollama (local, free) | `ollama/qwen3:8b` | `ollama` | Smoke-tested by hand, not evaluated. It worked end to end but called a full price "promotional", opened a complaint for a return request and took 12 to 60 s per reply on a 6 GB GPU |
 | OpenAI, Google Gemini, Groq, OpenRouter | `openai/…`, `google_genai/…`, `groq/…`, `openrouter/…` | `openai`, `google`, `groq`, `openrouter` | Supported through LangChain; the model builds and binds the six tools, but I haven't run it against the API |
 | AWS Bedrock | `bedrock_converse/…` | `aws` | Supported through LangChain, not tried |
+
+### Troubleshooting
+
+- **Every reply is "Estou com uma instabilidade agora…".** The model call failed, usually because of a wrong key, no credit or a wrong `MODEL`. The CLI also prints "Model call failed; see runtime/cadenza.log" on stderr, and that log has the provider's error.
+- **"EMPORIO_NOW must look like 2026-02-20T10:00".** Fix the date in `.env`, or leave it empty to use the current time.
 
 ## Key decisions
 
@@ -119,7 +124,8 @@ The full table, with the evidence and the code or test for each issue, is in [`d
 - **Only Anthropic is tested.** Other providers are wired through LangChain but not evaluated.
 - **Memory lives in RAM** and is lost when the CLI exits.
 - **No consistency measure.** The eval ran once per version; with more time I'd run it 3 times and add cases for price anchoring, off-topic jailbreaks and English-speaking customers.
-- **No quote tool.** If a customer asks for the total of several items, the model would have to add them up.
+- **Some sums are still left to the model.** The total for several items, the metro-area shipping fee (free above R$ 500, otherwise R$ 35), installments in fewer than the maximum ("em 5x fica quanto?") and a payment split between two methods have no tool, so the model would do the arithmetic. With more time, the tools would return these values ready.
+- **Example 04 has a made-up detail.** It calls the Tagima Dallas (86) a dreadnought, but it's a folk guitar. I kept it, because the examples are never edited by hand.
 - **Items marked "final sale"** in a clearance can't be exchanged (manual 4.4), but the data has no such flag.
 - **Not built:** a setup wizard in the CLI, a Dockerfile, LangGraph Studio support and a model comparison table.
 
@@ -140,9 +146,10 @@ The full table, with the evidence and the code or test for each issue, is in [`d
 I used Claude (chat) and Claude Code. The workflow:
 
 1. **Planning and data analysis** with Claude in chat. That's where the data conflicts above came from, and I wrote them into a plan.
-2. **Architecture** in Excalidraw: Claude drafted it and I adjusted it.
-3. **Implementation** with Claude Code, one block at a time (setup, domain and tools, agent and CLI, evals and examples, docs), each on its own branch and PR.
-4. **My review of every block and every commit.** Before each push I read the log, the per-file diff and a "How to test" list, ran the commands myself, and asked for changes locally. For example: splitting files that had grown past 250 lines, preferring alternatives with the same string type, terminal screenshots of the examples, and examples covering the store address and an off-topic question. I merged every PR myself.
+2. **Architecture**: I drew it in Excalidraw and asked Claude (chat) for improvements.
+3. **Implementation** with Claude Code, in short loops to move faster: Claude Code builds one part, I validate it and approve it or send it back, then we move on to the next. Each block (setup, domain and tools, agent and CLI, evals and examples, docs) had its own branch, small commits and a PR merged with a merge commit: the same Git workflow I use in my current job.
+4. **My review of every block and every commit.** Before each push I read the log, the per-file diff and a "How to test" list, ran the commands myself, and asked for changes locally. For example: splitting files that had grown past 250 lines, preferring alternatives with the same string type, terminal screenshots of the examples, and examples covering the store address and an off-topic question. Every PR was merged only after my explicit approval.
 5. **An independent review of the plan** before any code was written.
+6. **A review of the finished system by several AI agents**, each with its own role and report: a data auditor checked prices, promotions, PIX, installments and deadlines against its own answer key built from the CSVs (1,405 checks, no divergence there, though it did find search bugs and an order-lookup crash); QA and a red team talked to the live agent; an onboarding agent installed it from a clean clone with uv and with pip; and a tech lead read the code. The findings I accepted are fixed in `fix/review-findings`.
 
 Running real calls during the work caught three bugs the mocked unit tests couldn't see: `bind_tools` choking on the injected runtime argument, the F06 search bug, and the CLI printing whole replies in bold.

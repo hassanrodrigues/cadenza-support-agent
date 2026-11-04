@@ -14,6 +14,7 @@ I profiled the six CSVs and the policy manual before writing any code. Each conf
 | Several promotions per product | 93, 96 and 99 have two each, all inactive | The highest active discount would win, since promotions never stack | `store_data._apply_pricing` |
 | Catalog size | The manual says "more than 300 instruments"; the catalog has 65 | Availability comes only from the catalog tools; the policy tool adds a note saying so | `policies.TOPIC_NOTES` |
 | Typo in a product name | 84 is "Giannini GN-15 Nylon Cedr Natural" | Left as data; the model sometimes writes "Cedro" | none |
+| Rounding to the cent | Promo, PIX and installment values are rounded HALF_UP. For 12 prices ending in ,90 the PIX price is 1 cent above HALF_EVEN (product 81: R$ 569,91 against R$ 569,90), and for 31 products n × installment differs from the price by −5 to +4 cents | HALF_UP everywhere; the customer sees the rounded values the tools return, never a recomputed one | `store_data.to_money`, `store_data.max_installments` |
 
 ## Orders and customers
 
@@ -26,6 +27,12 @@ I profiled the six CSVs and the policy manual before writing any code. Each conf
 | Orders after "now" | The dataset runs to 22/03/2026 | Orders dated after the session's reference time are ignored | `test_orders_after_the_reference_time_are_ignored` |
 | Shared e-mail | Customers 11 and 43 share bruno.martins@jmail.com; only 11 has an order (10) | An e-mail that matches more than one customer asks for the phone or the order number | `test_shared_email_asks_for_more_unless_order_number_is_given` |
 | Phone format | All 50 phones have 11 digits; 55 is both Brazil's country code and a valid area code | Strip a leading 55 only when 12 or 13 digits remain; require the full number with area code | `order_rules.normalize_phone` |
+| Phone with a leading 0 | "0 67 99789-0123" (long-distance prefix) has 12 digits | Refused as incomplete: the rule accepts 10 or 11 digits, or 55 plus 10 or 11 | `order_rules.normalize_phone` |
+| PIX orders at list price | Orders 1, 5, 10, 13 and 17 were paid by PIX, but their totals equal the list price, without the 5% | The agent reports the recorded total and never recalculates | `support._order_view` |
+| No shipping fee on small local orders | Orders 7, 8, 9, 11 and 16 are under R$ 500 from Campo Grande customers, and none includes the R$ 35 fee (manual 5.1) | Same: the recorded total stands | none, documented only |
+| Local deliveries by post | Campo Grande orders took 7 to 11 business days with Correios tracking; the manual promises a courier in 1 to 3 business days | Consistent with treating every order as shipped; deadlines use `estimated_delivery` | `order_rules.return_windows` |
+| Promotional items at full price | Orders 2 (product 94) and 11 (product 127) include items on an active promotion today, charged at full price | Promotions have no dates, so I can't tell whether they were active at purchase | none, documented only |
+| Reference time before delivery | With `EMPORIO_NOW` earlier than a delivered order's estimated delivery, `days_since_delivery` is negative and the regret window shows as open | Only happens with a pinned clock earlier than the data; left as is | `support._order_view` |
 
 ## Policy manual
 
