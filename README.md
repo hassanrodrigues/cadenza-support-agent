@@ -12,7 +12,7 @@ Sample conversations, generated from real runs: [catalog and address](examples/0
 
 ![Architecture diagram](docs/architecture.png)
 
-A customer message enters the CLI, which keeps one LangGraph thread per session in memory. The `call_model` node sends the system prompt, the history and six tool schemas to Claude Haiku 5.5. If the model asks for a tool, `ToolNode` runs it and the loop returns to the model; otherwise the reply goes to the customer. The tools stay thin and call a plain-Python domain layer (`store_data.py`, `order_rules.py`, `policies.py`) that loads the CSVs and the PDF once and decides every number and rule.
+A customer message enters the CLI (or the optional web page), which keeps one LangGraph thread per session in memory. The `call_model` node sends the system prompt, the history and six tool schemas to Claude Haiku 5.5. If the model asks for a tool, `ToolNode` runs it and the loop returns to the model; otherwise the reply goes to the customer. The tools stay thin and call a plain-Python domain layer (`store_data.py`, `order_rules.py`, `policies.py`) that loads the CSVs and the PDF once and decides every number and rule.
 
 Project layout follows the official LangGraph ReAct agent template ([langchain-ai/react-agent](https://github.com/langchain-ai/react-agent), MIT), extended with a domain layer for the store data and policies. From the template I kept the `call_model` + `ToolNode` loop, the `is_last_step` step limit and the `provider/model` split in `load_chat_model`; the rest is written for this store.
 
