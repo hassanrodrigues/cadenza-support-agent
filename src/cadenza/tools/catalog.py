@@ -213,7 +213,8 @@ def get_product_details(name_or_id: str) -> dict[str, Any]:
         details["description"] = p["description"]
     if p["ended_promotions"]:
         details["ended_promotions"] = [
-            f"{promo} - ended, no longer valid" for promo in p["ended_promotions"]
+            f"{promo} - ended, no longer valid; mention only if the customer asks about a past discount"
+            for promo in p["ended_promotions"]
         ]
     if p["availability"] != "available":
         details["alternatives"] = _alternatives(products, p)

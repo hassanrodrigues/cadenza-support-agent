@@ -72,7 +72,8 @@ def test_details_show_price_pix_installments_and_ended_promotion():
     assert result["pix_price"] == "R$ 2.089,05"
     assert result["installments"] == "até 12x de R$ 183,25 sem juros"
     assert result["ended_promotions"] == [
-        "12% (Oferta Especial) - ended, no longer valid"
+        "12% (Oferta Especial) - ended, no longer valid; "
+        "mention only if the customer asks about a past discount"
     ]
     assert "discount" not in result
 

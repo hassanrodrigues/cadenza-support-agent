@@ -45,3 +45,10 @@ def test_current_context_says_the_store_is_open_during_business_hours():
 def test_current_context_says_when_the_team_is_back_after_hours():
     context = prompts.current_context(parse_now("2026-11-07T14:00"))
     assert "closed now; the team is back on Monday, 09/11/2026 at 09:00" in context
+
+
+def test_current_context_says_today_or_tomorrow_when_the_team_is_back():
+    early = prompts.current_context(parse_now("2026-11-03T03:59"))
+    evening = prompts.current_context(parse_now("2026-11-03T19:00"))
+    assert "back today, Tuesday, 03/11/2026 at 09:00" in early
+    assert "back tomorrow, Wednesday, 04/11/2026 at 09:00" in evening
